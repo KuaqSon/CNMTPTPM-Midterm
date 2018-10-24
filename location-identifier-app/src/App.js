@@ -5,7 +5,8 @@ class App extends Component {
   render() {
     return (
       <div>
-        <MapContainer></MapContainer>
+        <div>Request input</div>
+        <div><MapContainer></MapContainer></div>
       </div>
     );
   }
