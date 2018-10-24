@@ -1,0 +1,29 @@
+.request-form {
+    /* border: 1px solid black; */
+    padding: 1em;
+}
+
+.request-form .header-request {
+    /* border: 1px solid red; */
+    width: 30%;
+    background-color: white;
+    font-weight: bolder;
+    font-size: 2em;
+    border-radius: 16px;
+    padding: 0.5em;
+    margin-bottom: 1em;
+    box-shadow: 0 5px 20px rgba(25,17,34,0.1);
+}
+
+.request-form .header-request .header-request-text {
+    /* border: 1px solid green; */
+    margin: 0;
+}
+
+.request-form .form-container {
+    /* border: 1px solid blue; */
+    background-color: white;
+    border-radius: 16px;
+    padding: 2em;
+    box-shadow: 0 5px 20px rgba(25,17,34,0.1);
+}
