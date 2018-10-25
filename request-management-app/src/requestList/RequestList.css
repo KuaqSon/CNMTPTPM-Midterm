@@ -1,0 +1,41 @@
+.request-list {
+    /* border: 1px solid black; */
+    padding: 1em;
+}
+
+.request-list .header-request {
+    /* border: 1px solid red; */
+    width: 30%;
+    background-color: white;
+    font-weight: bolder;
+    font-size: 2em;
+    border-radius: 16px;
+    padding: 0.5em;
+    margin-bottom: 1em;
+    box-shadow: 0 5px 20px rgba(25,17,34,0.1);
+}
+
+.request-list .header-request .header-request-text {
+    /* border: 1px solid green; */
+    margin: 0;
+}
+
+.request-list .list-container {
+    /* border: 1px solid blue; */
+    margin-top: 1em;
+    background-color: white;
+    border-radius: 16px;
+    padding: 2em;
+    box-shadow: 0 5px 20px rgba(25,17,34,0.1);
+    height: 320px;
+}
+
+.list-container .list-card {
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.driver-name {
+    font-size: 24px !important;
+    padding: 12px 24px !important;
+}
