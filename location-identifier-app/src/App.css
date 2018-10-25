@@ -1,0 +1,44 @@
+body {
+    background-color: #f1f1f1 !important;
+}
+
+.maps-container {
+    /* width: 80%; */
+    margin: 0 auto;
+    padding: 1em;
+}
+
+.request-info {
+    padding: 1em;
+}
+
+.request-info .header-request {
+    width: 30%;
+    background-color: white;
+    font-weight: bolder;
+    font-size: 2em;
+    border-radius: 16px;
+    padding: 0.5em;
+    margin-bottom: 1em;
+    box-shadow: 0 5px 20px rgba(25,17,34,0.1);
+}
+
+.request-info .info-container {
+    background-color: white;
+    border-radius: 16px;
+    padding: 2em;
+    box-shadow: 0 5px 20px rgba(25,17,34,0.1);
+    margin-top: 1em;
+    height: 500px;
+}
+
+.request-info .info-container .info-badge {
+    margin-right: 8px;
+    padding: 8px 16px;
+    font-size: 16px;
+}
+
+.App {
+    max-width: 1140px;
+    margin: 0 auto;
+}

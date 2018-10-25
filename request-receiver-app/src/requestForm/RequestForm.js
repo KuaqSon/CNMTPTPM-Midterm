@@ -18,13 +18,13 @@ class RequestForm extends Component {
                     <Col md={6}>
                         <FormGroup>
                         <Label for="exampleEmail">Name</Label>
-                        <Input type="text" name="email" id="exampleEmail" placeholder="with a placeholder" />
+                        <Input type="text" name="name" id="exampleEmail" placeholder="with a placeholder" />
                         </FormGroup>
                     </Col>
                     <Col md={6}>
                         <FormGroup>
                         <Label for="examplePassword">Phone Number</Label>
-                        <Input type="tel" name="password" id="examplePassword" placeholder="password placeholder" />
+                        <Input type="tel" name="phone" id="examplePassword" placeholder="password placeholder" />
                         </FormGroup>
                     </Col>
                     </Row>
