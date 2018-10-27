@@ -2,7 +2,7 @@ var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
-var demo = require('./repos/demo');
+var demo = require('./routes/demo');
 
 
 var app = express();
