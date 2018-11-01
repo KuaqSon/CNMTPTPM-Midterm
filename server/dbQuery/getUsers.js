@@ -15,12 +15,14 @@ exports.findUserByID = (id) => {
 	return db.load(sql);
 };
 
-exports.addUser = (firstname, lastname, email, auth, username, password) => {
-	var sql = 'insert into world.user value ("'+ 2566 +'","'+ firstname +'","'+ lastname +'","' + username +'","'+ email +'","'+ auth +'","' + password +'")';
+
+
+exports.addUser = (name, email, auth, username, password, isDelete) => {
+	var sql = 'insert into world.user value (default,"'+ name +'","'+ email +'","' + auth +'","'+ username +'","'+ password +'",default,"' + isDelete + '")';
 	return db.load(sql);
 };
 
-exports.Update = (id, firstname, lastname, email, auth, username, password) => {
-	var sql = 'update world.user set firstname =  "'+ firstname + '", lastname =  "'+ lastname + '", username = "'+ username +'", email = "' + email + '", auth = "'+ auth + '", password = "' + password +'"';
+exports.Update = (id, name, email, auth, username, password) => {
+	var sql = 'update world.user set name =  "'+ name + '", email =  "'+ email + '", auth = '+ auth +', username = "' + username + '" where id = '+ id;
 	return db.load(sql);
 };

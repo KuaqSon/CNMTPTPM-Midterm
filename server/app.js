@@ -3,6 +3,9 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var user = require('./routes/user');
+var passport = require('passport');
+var session = require('express-session');
+var expressValidator = require('express-validator');
 
 
 var app = express();
@@ -21,6 +24,73 @@ app.get('/',(req,res)=>{
     })
 });
 
+// Express session middleware
+
+app.use(session({
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true
+    //cookie: { secure: true }
+}))
+
+
+
+// Express-validator
+
+app.use(expressValidator({
+    errorFormatter: function (param, msg, value) {
+        var namespace = param.split('.'),
+            root = namespace.shift(),
+            formParam = root;
+
+        while (namespace.length) {
+            formParam += '[' + namespace.shift() + ']';
+        }
+        return {
+            param: formParam,
+            msg: msg,
+            value: value
+        };
+    },
+    customValidators: {
+        isImage: function (value, filename) {
+            var extension = (path.extname(filename)).toLowerCase();
+            switch (extension) {
+                case '.jpg':
+                    return '.jpg';
+                case '.png':
+                    return '.png';
+                case '.jpeg':
+                    return '.jpeg';
+                case '':
+                    return '.jpg';
+                default:
+                    return false;
+            }
+        }
+    }
+}));
+
+
+// Passport Config
+require('./config/passport')(passport);
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+// Express Messages middleware
+var flash = require('connect-flash')
+app.use(flash());
+app.use(function (req, res, next) {
+    res.locals.messages = require('express-messages')(req, res);
+    next();
+});
+
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) { return next(); }
+    // res.redirect('/login')
+}
 
 function normalizePort(val) {
     var port = parseInt(val, 10);
