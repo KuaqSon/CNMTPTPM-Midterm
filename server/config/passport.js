@@ -1,27 +1,52 @@
 var localStratery = require('passport-local').Strategy;
 var bcrypt = require('bcryptjs');
 var User = require('../dbQuery/getUsers');
+var authRepo = require('./token');
 
-module.exports = function(passport){
+module.exports = function (passport) {
 
-    passport.use(new localStratery(function(usrename, password, done){
-
-        User.findUser(usrename)
+    passport.use(new localStratery(function (username, password, done) {
+        // console.log(usrename);
+        // console.log(password);
+        User.findUser(username)
             .then(rows => {
-                if(isEmpty(rows)){
-                    return done(null, false,  {message: 'No user found!'});
+                // console.log(rows);
+                var temp = rows;
+                if (isEmpty(temp)) {
+                    return done(null, false, { message: 'No user found!' });
                 }
-                else{
-                    bcrypt.compare(password, rows.password, function(err, isMatch){
-                        if(err)
-                            console.log(err);
-                        if(isMatch){
-                            return done(null, rows);
-                        } else{
-                            return done(null, false,  {message: 'Wrong password.'});
-                        }
+                else {
+                    // console.log(rows[0].password);
+                    bcrypt.compare(password, rows[0].password, function (err, isMatch) {
+                        if (isMatch){
+                            console.log('true');
+                            var userEntity = rows[0];
+                            var acToken = authRepo.generateAccessToken(userEntity);
+                            var rfToken = authRepo.generateRefreshToken();
+                            authRepo.updateRefreshToken(userEntity.id, rfToken)
+                                .then(value => {
+                                    console.log(userEntity);
+                                    console.log(acToken);
+                                    console.log(rfToken);
+                                    // res.json({
+                                    //     auth: true,
+                                    //     user: userEntity,
+                                    //     access_token: acToken,
+                                    //     refresh_token: rfToken
+                                    // });
+                                })
+                                .catch(err=>{
+                                    console.log(err);
+                                    res.statusCode = 500;
+                                })
+                            return done(null, rows[0]);
+                        } 
+                        else 
+                            return done(null, false, { message: 'Wrong password.' });
                     });
                 }
+            }).catch(err => {
+                console.log(err);
             });
     }));
 
@@ -32,10 +57,10 @@ module.exports = function(passport){
 
     passport.deserializeUser(function (id, done) {
         User.findUserByID(id)
-            .then(user =>{
+            .then(user => {
                 done(null, user);
-            })
-        
+            });
+
     });
 }
 

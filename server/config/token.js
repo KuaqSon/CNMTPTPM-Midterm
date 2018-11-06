@@ -1,22 +1,24 @@
 var jwt = require('jsonwebtoken');
 var rndToken = require('rand-token');
 var moment = require('moment');
+var _ = require('lodash');
+var jwt = require('jsonwebtoken');
+var db = require('./db');
 
-var db = require('../fn/mysql-db');
+var User = require('../dbQuery/getUsers');
 
-const SECRET = 'ABCDEF';
-const AC_LIFETIME = 600; // seconds
+const SECRETKEY = 'TAODEP';
+const AC_LIFETIME = 500;
 
 exports.generateAccessToken = userEntity => {
     var payload = {
         user: userEntity,
-        info: 'more info'
-    }
+        info: 'more infor'
+    };
 
-    var token = jwt.sign(payload, SECRET, {
+    var token = jwt.sign(payload, SECRETKEY, {
         expiresIn: AC_LIFETIME
     });
-
     return token;
 }
 
@@ -25,7 +27,7 @@ exports.verifyAccessToken = (req, res, next) => {
     console.log(token);
 
     if (token) {
-        jwt.verify(token, SECRET, (err, payload) => {
+        jwt.verify(token, SECRETKEY, (err, payload) => {
             if (err) {
                 res.statusCode = 401;
                 res.json({
@@ -34,7 +36,7 @@ exports.verifyAccessToken = (req, res, next) => {
                 })
             } else {
                 req.token_payload = payload;
-                next();
+                next;
             }
         });
     } else {
@@ -45,22 +47,23 @@ exports.verifyAccessToken = (req, res, next) => {
     }
 }
 
+
 exports.generateRefreshToken = () => {
-    const SIZE = 80;
-    return rndToken.generate(SIZE);
+    const size = 80;
+    return rndToken.generate(size);
 }
 
 exports.updateRefreshToken = (userId, rfToken) => {
     return new Promise((resolve, reject) => {
 
-        var sql = `delete from userRefreshTokenExt where ID = ${userId}`;
-        db.insert(sql) // delete
+        var sql = `delete from userRefreshTokenExt where userId = ${userId}`;
+        db.insert(sql)
             .then(value => {
                 var rdt = moment().format('YYYY-MM-DD HH:mm:ss');
-                sql = `insert into userRefreshTokenExt values(${userId}, '${rfToken}', '${rdt}')`;
+                sql = `insert into userRefreshTokenExt value(${userId}, '${rfToken}','${rdt}')`;
                 return db.insert(sql);
             })
             .then(value => resolve(value))
-            .catch(err => reject(err));
+            .catch(err => reject(err))
     });
 }

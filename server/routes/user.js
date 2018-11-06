@@ -3,8 +3,9 @@ var User = require('../dbQuery/getUsers');
 var router = express.Router();
 var bcrypt = require('bcrypt');
 var passport = require('passport');
-var UserSchema = require('../models/User');
-var moment = require('moment');
+var JSON
+// var UserSchema = require('../models/User');
+// var moment = require('moment');
 
 // const bodyParser = require("body-parser");
 // User is UserList dataType = json;
@@ -14,7 +15,7 @@ passport.serializeUser((user,done)=>{
 })
 
 passport.deserializeUser((id,done)=>{
-    User.findById(id)
+    User.findUserByID(id)
         .then((user)=>{
         done(null,user);
     })
