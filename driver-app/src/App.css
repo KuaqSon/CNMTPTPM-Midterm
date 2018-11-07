@@ -1,32 +1,143 @@
+body {
+  background-color: #f1f1f1 !important;
+}
+
+.maps-container {
+  /* width: 80%; */
+  margin: 0 auto;
+  padding: 1em;
+}
+
+.app-container {
+  padding: 1em;
+}
+
+.app-container .brand-logo {
+  background-color: white;
+  font-weight: bolder;
+  font-size: 2em;
+  border-radius: 16px;
+  padding: 0.5em;
+  margin-bottom: 1em;
+  box-shadow: 0 5px 20px rgba(25,17,34,0.1);
+}
+
+.app-container .info-container {
+  border-radius: 16px;
+  padding: 0.5em 1em;
+  box-shadow: 0 5px 20px rgba(25,17,34,0.1);
+  margin-top: 1em;
+  height: 360px;
+}
+
+.driver-info-card {
+  background-color: #69047e;
+}
+
+.driver-status-card {
+  background-color: #0093a6;
+}
+
+.status-info {
+  background-color: white;
+  border-radius: 16px;
+  padding: 0.5em 1em;
+  box-shadow: 0 5px 20px rgba(25,17,34,0.1);
+  margin-top: 1em;
+  position: absolute;
+  bottom: 1em;
+  width: calc(100% - 4em);
+  color: #424242;
+}
+
+.ride-info-card {
+  background-color: #ec7300;
+}
+
+.request-info-card {
+  background-color: #036bcb;
+}
+.card-info-header {
+  font-size: 2em;
+  font-weight: bold;
+  color: #ffff;
+}
+
+.card-bottom-content {
+  position: absolute;
+  bottom: 1em;
+  width: calc(100% - 4em);
+  color: #ffff;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin-bottom: auto;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.app-container .info-badge {
+  margin-right: 8px;
+  padding: 8px 16px;
+  font-size: 18px;
+}
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  max-width: 1140px;
+  margin: 0 auto;
 }
