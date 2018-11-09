@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom';
 
 const mapStyles = {
   map: {
-    position: 'absolute',
-    width: '50%',
-    height: '50%'
+    position: 'relative',
+    width: '100%',
+    height: '500px',
+    boxShadow: '0 5px 20px rgba(25,17,34,0.1)',
+    borderRadius: '16px',
   }
 };
 export class CurrentLocation extends React.Component {

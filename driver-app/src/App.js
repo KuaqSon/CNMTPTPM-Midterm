@@ -19,7 +19,7 @@ class App extends Component {
             </Col>
           </Row>
           <Row>
-            <Col sm={3}>
+            <Col md={3} sm={6}>
               <div className="info-container driver-status-card">
                 <div className="card-info-header">
                   Trạng thái 
@@ -42,7 +42,7 @@ class App extends Component {
                 </div>
               </div>
             </Col>
-            <Col sm={3}>
+            <Col md={3} sm={6}>
               <div className="info-container ride-info-card">
                 <div className="card-info-header">
                   Thông tin
@@ -51,7 +51,7 @@ class App extends Component {
                 </div>
 
                 <div className="status-info">
-                    <div className="mb-5 mt-2">
+                    <div className="mb-3 mt-2">
                       <Progress value={75}/>
                       <div className="text-center">
                         <Badge color="dark" className="info-badge mt-2">
@@ -71,7 +71,7 @@ class App extends Component {
                 </div>
               </div>
             </Col>
-            <Col sm={3}>
+            <Col md={3} sm={6}>
               <div className="info-container request-info-card">
                 <div className="card-info-header">
                   Khách hàng 
@@ -86,7 +86,7 @@ class App extends Component {
                 </div>
               </div>
             </Col>
-            <Col sm={3}>
+            <Col md={3} sm={6}>
               <div className="info-container driver-info-card">
                 <div className="card-info-header">
                   Tài xế
