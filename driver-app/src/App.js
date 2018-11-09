@@ -5,6 +5,26 @@ import { Col, Row, Button, Form, FormGroup, Label, Input, FormText, Progress , B
 
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { status: false, statusText: "STANDBY"} // pass data here 
+    this.handleStatusChange = this.handleStatusChange.bind(this)  
+}
+
+  handleStatusChange = (checked) => {
+    if (checked) {
+      this.setState({
+        status: false,
+        statusText: "STANDBY"
+      })
+    } else {
+      this.setState({
+        status: true,
+        statusText: "READY"
+      })
+    }
+  }
+
   render() {
     return (
       <div className="App">
@@ -26,17 +46,17 @@ class App extends Component {
                 </div>
 
                 <div className="status-info">
-                  <Row className="align-items-center">
-                    <Col span={4}>
+                  <Row className="align-items-center no-gutters">
+                    <Col>
                       <label className="switch">
-                        <input type="checkbox" defaultChecked/>
+                        <input type="checkbox" checked={this.state.status} onChange={() => this.handleStatusChange(this.state.status)}/>
                         <span className="slider round"></span>
                       </label>
                     </Col>
-                    <Col span={6}>
-                      <Badge color="primary" className="info-badge">
-                        Ready
-                      </Badge>
+                    <Col>
+                      <Badge color={this.state.status == true ? "primary" : "danger"} className="info-badge">
+                        {this.state.statusText}
+                      </Badge>  
                     </Col>
                   </Row>
                 </div>
