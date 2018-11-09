@@ -51,7 +51,7 @@ class App extends Component {
                 </div>
 
                 <div className="status-info">
-                    <div className="mb-5">
+                    <div className="mb-5 mt-2">
                       <Progress value={75}/>
                       <div className="text-center">
                         <Badge color="dark" className="info-badge mt-2">
@@ -65,7 +65,7 @@ class App extends Component {
                     <Badge color="info" className="info-badge mb-2">
                       Hoàn Thành: 5Km
                     </Badge>
-                    <Badge color="warning" className="info-badge">
+                    <Badge color="warning" className="info-badge mb-2">
                       Còn lại: 4Km
                     </Badge>
                 </div>
