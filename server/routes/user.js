@@ -25,10 +25,10 @@ passport.deserializeUser((id,done)=>{
 router.get('/', function (req, res) {
     // console.log(req.params.name);
 
-    var Users = User.loadAll()
+    User.loadAll()
         .then(rows => {
             res.json(rows);
-            console.log(rows);
+            console.log("Get data!");
         }).catch(err => {
             console.log(err);
             res.statusCode = 500;

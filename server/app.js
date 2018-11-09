@@ -3,9 +3,21 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var user = require('./routes/user');
+var receivers = require('./routes/receiver');
 var passport = require('passport');
 var session = require('express-session');
 var expressValidator = require('express-validator');
+const io = require('socket.io')();
+
+
+io.on('connection', (client) => {
+    client.on('subscribeToTimer', (interval) => {
+        console.log('client is subscribing to timer with interval ', interval);
+        setInterval(() => {
+            client.emit('timer', new Date());
+        }, interval);
+    });
+});
 
 
 var app = express();
@@ -21,9 +33,9 @@ app.use(bodyParser.json());
 
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({
-  secret: 'keyboard cat',
-  resave: true,
-  saveUninitialized: true
+    secret: 'keyboard cat',
+    resave: true,
+    saveUninitialized: true
 }));
 
 
@@ -47,39 +59,7 @@ app.use(session({
 
 // Express-validator
 
-app.use(expressValidator({
-    errorFormatter: function (param, msg, value) {
-        var namespace = param.split('.'),
-            root = namespace.shift(),
-            formParam = root;
 
-        while (namespace.length) {
-            formParam += '[' + namespace.shift() + ']';
-        }
-        return {
-            param: formParam,
-            msg: msg,
-            value: value
-        };
-    },
-    customValidators: {
-        isImage: function (value, filename) {
-            var extension = (path.extname(filename)).toLowerCase();
-            switch (extension) {
-                case '.jpg':
-                    return '.jpg';
-                case '.png':
-                    return '.png';
-                case '.jpeg':
-                    return '.jpeg';
-                case '':
-                    return '.jpg';
-                default:
-                    return false;
-            }
-        }
-    }
-}));
 
 
 
@@ -105,6 +85,8 @@ app.use(passport.session());
 // }
 
 app.use('/users', user);
+app.use('/receivers', receivers);
+
 
 app.get('/', (req, res) => {
     res.json({
@@ -132,6 +114,9 @@ function normalizePort(val) {
 }
 
 var port = normalizePort(process.env.PORT || '3000');
+// io.listen(port, function(){
+//     console.log('Socket listening on port' + port);
+// });
 app.listen(port, function () {
     console.log('Sever started on port ' + port);
 });
