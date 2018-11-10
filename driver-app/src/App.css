@@ -12,7 +12,7 @@ body {
   padding: 1em;
 }
 
-.app-container .brand-logo {
+.brand-logo {
   background-color: white;
   font-weight: bolder;
   font-size: 2em;
@@ -68,6 +68,24 @@ body {
   bottom: 1em;
   width: calc(100% - 4em);
   color: #ffff;
+}
+
+.modal-content {
+  background-color: transparent !important;
+  border: 0 !important;
+}
+
+.request-modal {
+  background-color: white;
+  font-size: 1em;
+  border-radius: 16px;
+  padding: 2em;
+  color: #424242;
+  box-shadow: 0 5px 20px rgba(25,17,34,0.1);
+}
+
+.request-modal-content {
+  margin-bottom: 2em;
 }
 
 .switch {

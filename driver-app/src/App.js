@@ -1,18 +1,93 @@
 import React, { Component } from 'react';
 import MapContainer from './maps/MapContainer';
 import './App.css';
-import { Col, Row, Button, Form, FormGroup, Label, Input, FormText, Progress , Badge, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
+import { 
+  Col, 
+  Row, 
+  Button, 
+  Form, 
+  FormGroup, 
+  Label, 
+  Input, 
+  FormText, 
+  Progress , 
+  Badge, 
+  ListGroup, 
+  ListGroupItem, 
+  ListGroupItemHeading, 
+  Modal,  
+} from 'reactstrap';
 
 
 class App extends Component {
   constructor(props) {
     super(props)
-    this.state = { status: false, statusText: "STANDBY"} // pass data here 
-    this.handleStatusChange = this.handleStatusChange.bind(this)  
+    this.state = { 
+      status: false, 
+      statusText: "STANDBY",
+      modalVisible: false,
+      time: {}, 
+      seconds: 10
+    }; // pass data here 
+
+    this.timer = 0;
+    this.startTimer = this.startTimer.bind(this);
+    this.countDown = this.countDown.bind(this);
+    this.handleStatusChange = this.handleStatusChange.bind(this);  
+    this.handleModalVisible = this.handleModalVisible.bind(this);
 }
 
-  handleStatusChange = (checked) => {
-    if (checked) {
+  secondsToTime(secs){
+    let hours = Math.floor(secs / (60 * 60));
+
+    let divisor_for_minutes = secs % (60 * 60);
+    let minutes = Math.floor(divisor_for_minutes / 60);
+
+    let divisor_for_seconds = divisor_for_minutes % 60;
+    let seconds = Math.ceil(divisor_for_seconds);
+
+    let obj = {
+      "h": hours,
+      "m": minutes,
+      "s": seconds
+    };
+    return obj;
+  }
+
+  // componentDidMount() {
+  //   let timeLeftVar = this.secondsToTime(this.state.seconds);
+  //   this.setState({ time: timeLeftVar });
+  // }
+
+  startTimer() {
+    this.setState({
+      seconds: 10,
+      time: this.secondsToTime(10)
+    })
+    clearInterval(this.timer);
+    this.timer = setInterval(this.countDown, 1000);
+    // if (this.timer == 0 && this.state.seconds > 0) {
+    //   this.timer = setInterval(this.countDown, 1000);
+    // }
+  }
+
+  countDown() {
+    // Remove one second, set state so a re-render happens.
+    let seconds = this.state.seconds - 1;
+    this.setState({
+      time: this.secondsToTime(seconds),
+      seconds: seconds,
+    });
+    
+    // Check if we're at zero.
+    if (seconds == 0) { 
+      clearInterval(this.timer);
+      this.handleModalVisible();
+    }
+  }
+
+  handleStatusChange = () => {
+    if (this.state.status) {
       this.setState({
         status: false,
         statusText: "STANDBY"
@@ -25,11 +100,17 @@ class App extends Component {
     }
   }
 
+  handleModalVisible = () => {
+    this.setState({
+      modalVisible: !this.state.modalVisible,
+    });
+  }
+
   render() {
     return (
       <div className="App">
         <div className="app-container">
-          <Row>
+          <Row onClick={() => this.handleModalVisible()}>
             <Col md={4} sm={6}> 
               <div className="brand-logo">
                 Doubble Son 
@@ -38,6 +119,33 @@ class App extends Component {
               </div>
             </Col>
           </Row>
+
+          <div>
+            <Modal 
+            isOpen={this.state.modalVisible} 
+            toggle={this.handleModalVisible} 
+            onOpened={this.startTimer}
+            centered={true}
+            >
+              <div className="request-modal">
+                <div className="request-modal-content">
+                  <h4>Khách hàng</h4>
+                  <h3>Trần Thị B</h3>
+                  <div>
+                    Sđt: 124124124
+                  </div>
+                  <div>
+                    Địa chỉ: 391 Lũy Bán Bích
+                  </div>
+                </div>
+                <div>
+                <Button color="primary" onClick={this.handleModalVisible}>Accept {this.state.time.s}</Button>{' '}
+                <Button color="secondary" onClick={this.handleModalVisible}>Cancel</Button>
+                </div>
+              </div>
+            </Modal>
+          </div>
+
           <Row>
             <Col md={3} sm={6}>
               <div className="info-container driver-status-card">
@@ -49,7 +157,7 @@ class App extends Component {
                   <Row className="align-items-center no-gutters">
                     <Col>
                       <label className="switch">
-                        <input type="checkbox" checked={this.state.status} onChange={() => this.handleStatusChange(this.state.status)}/>
+                        <input type="checkbox" checked={this.state.status} onChange={() => this.handleStatusChange()}/>
                         <span className="slider round"></span>
                       </label>
                     </Col>
