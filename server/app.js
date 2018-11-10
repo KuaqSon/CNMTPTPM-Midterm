@@ -3,21 +3,22 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var user = require('./routes/user');
-var receivers = require('./routes/receiver');
+var request = require('./routes/request');
 var passport = require('passport');
 var session = require('express-session');
 var expressValidator = require('express-validator');
-const io = require('socket.io')();
+const socketIo = require('socket.io');
+// const http = require('http').Server(app);
+// const cors = require('cors');
 
-
-io.on('connection', (client) => {
-    client.on('subscribeToTimer', (interval) => {
-        console.log('client is subscribing to timer with interval ', interval);
-        setInterval(() => {
-            client.emit('timer', new Date());
-        }, interval);
-    });
-});
+// io.on('connection', (client) => {
+//     client.on('subscribeToTimer', (interval) => {
+//         console.log('client is subscribing to timer with interval ', interval);
+//         setInterval(() => {
+//             client.emit('timer', new Date());
+//         }, interval);
+//     });
+// });
 
 
 var app = express();
@@ -27,7 +28,7 @@ app.use(bodyParser.urlencoded({
 }))
 
 app.use(bodyParser.json());
-
+// app.use(cors);
 
 
 
@@ -85,7 +86,7 @@ app.use(passport.session());
 // }
 
 app.use('/users', user);
-app.use('/receivers', receivers);
+app.use('/request', request);
 
 
 app.get('/', (req, res) => {
@@ -114,6 +115,7 @@ function normalizePort(val) {
 }
 
 var port = normalizePort(process.env.PORT || '3000');
+
 // io.listen(port, function(){
 //     console.log('Socket listening on port' + port);
 // });
