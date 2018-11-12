@@ -9,7 +9,7 @@ var session = require('express-session');
 var expressValidator = require('express-validator');
 const socketIo = require('socket.io');
 // const http = require('http').Server(app);
-// const cors = require('cors');
+const cors = require('cors');
 
 // io.on('connection', (client) => {
 //     client.on('subscribeToTimer', (interval) => {
@@ -20,15 +20,26 @@ const socketIo = require('socket.io');
 //     });
 // });
 
+var whitelist = ['http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004']
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
 
 var app = express();
+
+app.use(cors);
 
 app.use(bodyParser.urlencoded({
     extended: false
 }))
 
 app.use(bodyParser.json());
-// app.use(cors);
 
 
 
