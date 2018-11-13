@@ -1,0 +1,10 @@
+.driver-login {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: white;
+    font-weight: bolder;
+    font-size: 1.5em;
+    border-radius: 16px;
+    padding: 1em;
+    box-shadow: 0 5px 20px rgba(25,17,34,0.1);
+}
