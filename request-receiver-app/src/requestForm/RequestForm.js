@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import './RequestForm.css';
 import { Col, Row, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
-// import Textfield from 'material-ui/Textfield';
-// import axios from 'axios';
+import axios from 'axios';
 
 class RequestForm extends Component {
 
@@ -44,11 +43,6 @@ class RequestForm extends Component {
                 'Content-Type': 'application/json'
             }
         })
-            .then(function (response) {
-                return response.json()
-            }).then(function (body) {
-                console.log(body);
-            });
     }
 
     // componentDidMount() {
@@ -77,8 +71,8 @@ class RequestForm extends Component {
         const self = this;
         return (
 
-            <div className="request-form">Data have been loaded
-              <div className="header-request">
+            <div className="request-form">
+                <div className="header-request">
                     Doubble Son
                     <br></br>
                     Take car

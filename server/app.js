@@ -22,15 +22,26 @@ const Requestdb = require('./dbQuery/getRequest');
 //     });
 // });
 
+var whitelist = ['http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004']
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
 
 var app = express();
+
+app.use(cors());
 
 app.use(bodyParser.urlencoded({
     extended: false
 }))
 
 app.use(bodyParser.json());
-// app.use(cors);
 
 
 

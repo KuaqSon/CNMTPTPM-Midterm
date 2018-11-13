@@ -65,7 +65,18 @@ router.post('/edit', function (req, res) {
 
 });
 
+router.post('/test', (req, res) => {
+    const {name, phone} = req.body;
+	
+    console.log(name + '---' +phone);
+    
+    // To Do: bussiness with data here
 
+	res.json({
+        msg: 'test successful!'
+    });
+
+});
 
 
 module.exports = router;
