@@ -2,12 +2,67 @@ import React, { Component } from 'react';
 import MapContainer from './maps/MapContainer';
 import './App.css';
 import { Col, Row, Button, Form, FormGroup, Label, Input, FormText, Badge, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
+import socketIoClient from 'socket.io-client';
 
 
 class App extends Component {
+  constructor(){
+    super();
+    this.state = {
+      res: false,
+      endpoint: "http://localhost:3000" 
+    }
+  }
+
+  componentDidMount() {
+    const self =this;
+    const {endpoint} = self.state;
+    const socket = socketIoClient(endpoint);
+    socket.on("get data", data => this.setState({res: data}));
+    console.log(self.state.res);
+    // const  {endpoint} = self.state;
+
+    // setInterval(() => self.send(), 3000);
+  }
+
+  // componentWillUnmount() {
+  //   // use intervalId from the state to clear the interval
+  //   clearInterval(this.send());
+  // }; 
+
+  send = () =>{
+    var self = this;
+    const socket = socketIoClient(self.state.endpoint,{
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 2000,
+      reconnectionAttempts: 5,
+    });
+    socket.on("get data", (data)=>{
+      self.setState({res: data});
+      console.log(self.state.res);
+    });
+
+  }
+
   render() {
+    // const socket = socketIoClient(this.state.endpoint);
+    // socket.on('bo may day');
+    // this.send();
+    var self = this;
+    console.log(self.state.res);
+  const {res} = self.state;
+  console.log({res});
+    // this.send();
     return (
+
+      
       <div className="App">
+
+      {/* <div style={{ textAlign: "center" }}>
+        <button onClick={() => this.send() }>Change Color</button>
+      </div> */}
+
         <div className="request-info">
           <div className="header-request">
             Doubble Son 

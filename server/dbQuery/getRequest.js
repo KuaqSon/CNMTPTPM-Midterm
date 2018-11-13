@@ -10,6 +10,11 @@ exports.findByTelephone = (telephoneNumber) =>{
 	return db.load(sql);
 };
 
+exports.findByName = (name) =>{
+	var sql = 'select * from request where name = ' + name;
+	return db.load(sql);
+};
+
 exports.findById = (Id) =>{
 	var sql = 'select name from request where id = ' + Id;
 	return db.load(sql);
@@ -21,7 +26,7 @@ exports.edit = (id, telephoneNumber, name , address, infor) =>{
 }
 
 exports.addRequest = (name, telephoneNumber, address, infor) =>{
-	var sql = 'insert into request value (default, ' + telephoneNumber + ', "'+ name +'", "' + address + '" , "'+ infor +'", default, default)';
+	var sql = 'insert into request value (default, ' + telephoneNumber + ', "'+ name +'", "' + address + '" , "'+ infor +'", default, default, default)';
 	return db.load(sql);
 }
 

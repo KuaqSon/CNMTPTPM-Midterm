@@ -25,7 +25,7 @@ router.post('/add', function (req, res) {
     var address = req.body.address;
     var infor = req.body.infor;
 
-    Request.findByTelephone(telephone)
+    Request.findByName(name)
         .then(rows => {
             if (!isEmpty(rows))
                 res.json({
