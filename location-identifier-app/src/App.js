@@ -20,15 +20,8 @@ class App extends Component {
     const socket = socketIoClient(endpoint);
     socket.on("get data", data => self.setState({ res: JSON.stringify(data) }));
     console.log(self.state.res);
-    // const  {endpoint} = self.state;
-
-    // setInterval(() => self.send(), 3000);
   }
 
-  // componentWillUnmount() {
-  //   // use intervalId from the state to clear the interval
-  //   clearInterval(this.send());
-  // }; 
 
   send = () => {
     var self = this;

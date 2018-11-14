@@ -1,15 +1,43 @@
 import React, { Component } from 'react';
 import './RequestList.css';
-import { Col, Row, Button, Form, FormGroup, Label, Input, Table, Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, CardImgOverlay, Badge  } from 'reactstrap';
+import {
+    Col, Row, Button, Form, FormGroup, Label, Input, Table, Card, CardImg, CardText, CardBody,
+    CardTitle, CardSubtitle, CardImgOverlay, Badge
+} from 'reactstrap';
+import socketIoClient from 'socket.io-client';
 
 
 class RequestForm extends Component {
+
+    constructor() {
+        super();
+        this.state = {
+            res: false,
+            endpoint: "http://localhost:3000"
+        }
+    }
+
+    componentDidMount() {
+        const self = this;
+        const { endpoint } = self.state;
+        const socket = socketIoClient(endpoint);
+        socket.on("get data", data => self.setState({ res: JSON.stringify(data) }));
+        console.log(self.state.res);
+    }
+
+
+
     render() {
+
+        var self = this;
+        var { res, endpoint } = self.state;
+
+        // res là json như app location
+
         return (
             <div className="request-list">
                 <div className="header-request">
-                    Doubble Son 
+                    Doubble Son
                     <br></br>
                     Take car
                 </div>
