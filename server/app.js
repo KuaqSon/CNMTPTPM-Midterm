@@ -11,7 +11,7 @@ const socketIo = require('socket.io');
 const http = require('http');
 const server = http.Server(app);
 const Requestdb = require('./dbQuery/getRequest');
-// const cors = require('cors');
+const cors = require('cors');
 
 // io.on('connection', (client) => {
 //     client.on('subscribeToTimer', (interval) => {
@@ -116,6 +116,8 @@ const io = socketIo(server, {
     cookie: false
 });
 const port1 = 3001;
+const port2 = 3002
+
 io.on('connect', socket => {
     console.log("New user connected"), setInterval(
         () => getApiAndEmit(socket),
@@ -138,7 +140,7 @@ const getApiAndEmit = async socket => {
             // console.log(res);
             try {
                 socket.emit("get data", res);
-                    console.log(res);
+                    // console.log(res);
         
             } catch (error) {
                 console.error(`Error: ${error.code}`);
@@ -152,70 +154,19 @@ const getApiAndEmit = async socket => {
 
    
 }
-// io.on('connect', function (socket, res) {
-//     console.log('User connect');
-
-//     Requestdb.loadAll()
-//     .then(rows => {
-//         var data = JSON.stringify(rows);
-//         io.sockets.emit("get data", data);
-//         console.log('User get data');
-//         // socket.emit("get data", data);
-//         // console.log(data);
-//         // console.log("Get data!");
-//     }).catch(err => {
-//         console.log(err);
-//         res.statusCode = 500;
-//         res.end('Erro');
-//     });
-
-
-//     // socket.on('get data', () => {
-
-//     //     Requestdb.loadAll()
-//     //     .then(rows => {
-//     //         var data = JSON.stringify(rows);
-//     //         io.sockets.emit("get data", data);
-//     //         console.log('User get data');
-//     //         // socket.emit("get data", data);
-//     //         // console.log(data);
-//     //         // console.log("Get data!");
-//     //     }).catch(err => {
-//     //         console.log(err);
-//     //         res.statusCode = 500;
-//     //         res.end('Erro');
-//     //     });
-
-
-//     //     // io.sockets.emit('bo may day');
-//     // })
-//     socket.on('disconet', () => {
-//         console.log('User disconnect');
-//         // window.setTimeout('')
-
-
-//     });
-
-// });
-
-server.listen(port1, '::1', function () {
-    console.log('Socket1 listen on port ' + port1);
-
-})
 
 
 // listen 
-let http2 = require('http').Server(app);
-let io2 = require('socket.io')(http2);
-const port2 = 3002
+// let http2 = require('http').Server(app);
+// let io2 = require('socket.io')(http2);
 
-http2.listen(port2, '::1', function () {
-    console.log('Socket2 listen on port ' + port2);
-});
+// http2.listen(port1, '::1', function () {
+//     console.log('Socket2 listen on port ' + port1);
+// });
 
-io2.on('connect', function (socket) {
+// io2.on('connect', function (socket) {
 
-});
+// });
 
 function normalizePort(val) {
     var port = parseInt(val, 10);

@@ -6,19 +6,19 @@ import socketIoClient from 'socket.io-client';
 
 
 class App extends Component {
-  constructor(){
+  constructor() {
     super();
     this.state = {
       res: false,
-      endpoint: "http://localhost:3000" 
+      endpoint: "http://localhost:3000"
     }
   }
 
   componentDidMount() {
-    const self =this;
-    const {endpoint} = self.state;
+    const self = this;
+    const { endpoint } = self.state;
     const socket = socketIoClient(endpoint);
-    socket.on("get data", data => this.setState({res: data}));
+    socket.on("get data", data => self.setState({ res: JSON.stringify(data) }));
     console.log(self.state.res);
     // const  {endpoint} = self.state;
 
@@ -30,45 +30,41 @@ class App extends Component {
   //   clearInterval(this.send());
   // }; 
 
-  send = () =>{
+  send = () => {
     var self = this;
-    const socket = socketIoClient(self.state.endpoint,{
+    const socket = socketIoClient(self.state.endpoint, {
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 2000,
       reconnectionAttempts: 5,
     });
-    socket.on("get data", (data)=>{
-      self.setState({res: data});
+    socket.on("get data", (data) => {
+      self.setState({ res: data });
       console.log(self.state.res);
     });
 
   }
 
   render() {
-    // const socket = socketIoClient(this.state.endpoint);
-    // socket.on('bo may day');
-    // this.send();
     var self = this;
-    console.log(self.state.res);
-  const {res} = self.state;
-  console.log({res});
-    // this.send();
+    var { res, endpoint } = self.state;
+// res.map(item => console.log(item.name));
+
+    console.log(res);
     return (
-
-      
-      <div className="App">
-
-      {/* <div style={{ textAlign: "center" }}>
-        <button onClick={() => this.send() }>Change Color</button>
-      </div> */}
-
-        <div className="request-info">
+      < div className="App" >
+        < div className="request-info" >
           <div className="header-request">
-            Doubble Son 
+
+            Doubble Son
             <br></br>
-            Take car
+
+            
+
           </div>
+
+
+
           <Row>
             <Col md={6}>
               <div className="info-container">
@@ -118,11 +114,11 @@ class App extends Component {
                     </ListGroupItemText>
                     <ListGroupItemText>
                       <Badge className="info-badge" color="dark" pill>Notes</Badge>
-                      
+
                     </ListGroupItemText>
                   </ListGroupItem>
                   <ListGroupItem>
-                    <Input type="text" name="address" placeholder="Input address here to indentify location..."></Input> 
+                    <Input type="text" name="address" placeholder="Input address here to indentify location..."></Input>
                     <br></br>
                     <Button color="info">Identify</Button>
                   </ListGroupItem>
@@ -130,11 +126,11 @@ class App extends Component {
               </div>
             </Col>
           </Row>
-        </div>
+        </div >
         <div className="maps-container">
           <MapContainer></MapContainer>
         </div>
-      </div>
+      </div >
     );
   }
 }
