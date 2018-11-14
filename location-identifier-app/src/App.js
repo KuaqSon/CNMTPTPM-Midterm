@@ -49,6 +49,18 @@ class App extends Component {
     var self = this;
     var { res, endpoint } = self.state;
 // res.map(item => console.log(item.name));
+// res là 1 cục json mẫu như này:
+//create table `request`(
+//id int(11) unsigned AUTO_INCREMENT PRIMARY KEY,
+//telephone int(14) not null,
+//name varchar(50) not null,
+//address varchar(50) not null,
+//infor varchar(100),
+//state integer not null, = 1 là đang chờ thằng tài tới chở, =0 là nó đón cmnr, =2 là lọ đó hủy chuyến
+//isDelete boolean default false,
+//created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+//);
+// Cần lấy name, telephone, address, state thôi nhá
 
     console.log(res);
     return (
