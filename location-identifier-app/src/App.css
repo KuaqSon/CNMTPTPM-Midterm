@@ -32,6 +32,11 @@ body {
     height: 500px;
 }
 
+.request-info .info-container .request-table {
+    height: 436px;
+    overflow-y: scroll;
+}
+
 .request-info .info-container .info-badge {
     margin-right: 8px;
     padding: 8px 16px;

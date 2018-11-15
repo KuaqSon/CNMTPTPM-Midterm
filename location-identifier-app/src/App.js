@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MapContainer from './maps/MapContainer';
 import './App.css';
-import { Col, Row, Button, Form, FormGroup, Label, Input, FormText, Badge, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
+import { Col, Row, Button, Table, Form, FormGroup, Label, Input, FormText, Badge, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 import socketIoClient from 'socket.io-client';
 
 
@@ -10,8 +10,11 @@ class App extends Component {
     super();
     this.state = {
       res: false,
+      detail: "",
       endpoint: "http://localhost:3000"
     }
+
+    this.SetRequestDetail = this.SetRequestDetail.bind(this);
   }
 
   componentDidMount() {
@@ -20,6 +23,15 @@ class App extends Component {
     const socket = socketIoClient(endpoint);
     socket.on("get data", data => self.setState({ res: JSON.stringify(data) }));
     console.log(self.state.res);
+  };
+
+  SetRequestDetail = (record) => {
+    this.setState({
+      detail: record
+    })
+  }
+  GetRequestDetail = (record) => {
+    this.SetRequestDetail(record);
   }
 
 
@@ -33,14 +45,15 @@ class App extends Component {
     });
     socket.on("get data", (data) => {
       self.setState({ res: data });
-      console.log(self.state.res);
+      console.log(data);
     });
 
   }
 
   render() {
     var self = this;
-    var { res, endpoint } = self.state;
+    var { res, detail } = self.state;
+    const data = JSON.parse(self.state.res);
 // res.map(item => console.log(item.name));
 // res là 1 cục json mẫu như này:
 //create table `request`(
@@ -60,12 +73,7 @@ class App extends Component {
       < div className="App" >
         < div className="request-info" >
           <div className="header-request">
-
             Doubble Son
-            <br></br>
-
-            
-
           </div>
 
 
@@ -73,32 +81,24 @@ class App extends Component {
           <Row>
             <Col md={6}>
               <div className="info-container">
-                <ListGroup flush>
-                  <ListGroupItem active>
-                    <ListGroupItemHeading>Nguyen Van A</ListGroupItemHeading>
-                    <ListGroupItemText>
-                      227 Đường Nguyễn Văn Cừ, Phường 4, Quận 5, Hồ Chí Minh
-                    </ListGroupItemText>
-                  </ListGroupItem>
-                  <ListGroupItem>
-                    <ListGroupItemHeading>Nguyen Thi B</ListGroupItemHeading>
-                    <ListGroupItemText>
-                      10-12 Đinh Tiên Hoàng, Bến Nghé, Quận 1, Hồ Chí Minh
-                    </ListGroupItemText>
-                  </ListGroupItem>
-                  <ListGroupItem>
-                    <ListGroupItemHeading>Tran Van C</ListGroupItemHeading>
-                    <ListGroupItemText>
-                      268 Lý Thường Kiệt, Phường 14, Quận 10, Hồ Chí Minh
-                    </ListGroupItemText>
-                  </ListGroupItem>
-                  <ListGroupItem>
-                    <ListGroupItemHeading>Tran Van C</ListGroupItemHeading>
-                    <ListGroupItemText>
-                      268 Lý Thường Kiệt, Phường 14, Quận 10, Hồ Chí Minh
-                    </ListGroupItemText>
-                  </ListGroupItem>
-                </ListGroup>
+                <div className="request-table">
+                  <Table hover responsive>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {Object.values(data).map(x => 
+                      <tr key={x.id} onClick={() => this.GetRequestDetail(x)}>
+                        <td>{x.name}</td>
+                        <td>{x.address.length >= 50 ? x.address.substring(0, 50)+ "..." : x.address}</td>
+                      </tr>
+                    )}
+                    </tbody>
+                  </Table>
+                </div>
               </div>
             </Col>
             <Col md={6}>
@@ -107,19 +107,19 @@ class App extends Component {
                   <ListGroupItem>
                     <ListGroupItemHeading>
                       <Badge className="info-badge" color="dark" pill>Name</Badge>
-                      Nguyen Van A
+                      {detail.name? detail.name : ""}
                     </ListGroupItemHeading>
                     <ListGroupItemText>
                       <Badge className="info-badge" color="dark" pill>Phone</Badge>
-                      12345678
+                      {detail.telephone? detail.telephone: ""}
                     </ListGroupItemText>
                     <ListGroupItemText>
                       <Badge className="info-badge" color="dark" pill>Address</Badge>
-                      227 Đường Nguyễn Văn Cừ, Phường 4, Quận 5, Hồ Chí Minh
+                      {detail.address? detail.address: ""}
                     </ListGroupItemText>
                     <ListGroupItemText>
                       <Badge className="info-badge" color="dark" pill>Notes</Badge>
-
+                      {detail.info? detail.info: ""}
                     </ListGroupItemText>
                   </ListGroupItem>
                   <ListGroupItem>
