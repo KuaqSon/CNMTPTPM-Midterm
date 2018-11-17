@@ -5,6 +5,7 @@ import {
     CardTitle, CardSubtitle, CardImgOverlay, Badge
 } from 'reactstrap';
 import socketIoClient from 'socket.io-client';
+import MapContainer from '../maps/MapContainer';
 
 
 class RequestForm extends Component {
@@ -99,8 +100,9 @@ class RequestForm extends Component {
                         </div>
                     </Col>
                     <Col md={6}>
-                        <div className="list-container">
-                            <h1><Badge color="secondary">Maps will load here...</Badge></h1>
+                        <div className="mt-3">
+                            {/* <h1><Badge color="secondary">Maps will load here...</Badge></h1> */}
+                            <MapContainer />
                         </div>
                     </Col>
                 </Row>
