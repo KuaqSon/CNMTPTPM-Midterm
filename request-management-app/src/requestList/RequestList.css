@@ -27,7 +27,7 @@
     border-radius: 16px;
     padding: 2em;
     box-shadow: 0 5px 20px rgba(25,17,34,0.1);
-    height: 320px;
+    /* height: 320px; */
 }
 
 .list-container .list-card {
@@ -38,4 +38,9 @@
 .driver-name {
     font-size: 24px !important;
     padding: 12px 24px !important;
+}
+
+.request-table {
+    height: 320px;
+    overflow-y: scroll;
 }

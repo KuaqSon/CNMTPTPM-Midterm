@@ -25,6 +25,24 @@ class RequestForm extends Component {
         console.log(self.state.res);
     }
 
+    send = () => {
+        var self = this;
+        const socket = socketIoClient(self.state.endpoint, {
+            reconnection: true,
+            reconnectionDelay: 1000,
+            reconnectionDelayMax: 2000,
+            reconnectionAttempts: 5,
+        });
+        socket.on("get data", (data) => {
+            self.setState({ res: data });
+            console.log(data);
+        });
+    }
+
+    GetRequestDetails = (record) => {
+        console.log(record);
+    }
+
 
 
     render() {
@@ -32,8 +50,9 @@ class RequestForm extends Component {
         var self = this;
         var { res, endpoint } = self.state;
 
+        const data = JSON.parse(self.state.res);
         // res là json như app location
-
+        console.log(res);
         return (
             <div className="request-list">
                 <div className="header-request">
@@ -43,40 +62,28 @@ class RequestForm extends Component {
                 </div>
 
                 <div className="list-container">
-                    <Table hover borderless>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Phone</th>
-                                <th>Address</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>123456</td>
-                                <td>227 Đường Nguyễn Văn Cừ, Phường 4, Quận 5, Hồ Chí Minh</td>
-                                <td>@mdo</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>5435345</td>
-                                <td>227 Đường Nguyễn Văn Cừ, Phường 4, Quận 5, Hồ Chí Minh</td>
-                                <td>@fat</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>Larry</td>
-                                <td>345345</td>
-                                <td>227 Đường Nguyễn Văn Cừ, Phường 4, Quận 5, Hồ Chí Minh</td>
-                                <td>@twitter</td>
-                            </tr>
-                        </tbody>
-                    </Table>
+                    <div className="request-table">
+                        <Table hover borderless>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Address</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {Object.values(data).map(x => 
+                                <tr key={x.id} onClick={() => this.GetRequestDetails(x)}>
+                                    <td>{x.name}</td>
+                                    <td>{x.telephone}</td>
+                                    <td>{x.address.length >= 70 ? x.address.substring(0, 70)+ "..." : x.address}</td>
+                                    <td>{x.infor}</td>
+                                </tr>
+                            )}
+                            </tbody>
+                        </Table>
+                    </div>
                 </div>
 
                 <Row>
