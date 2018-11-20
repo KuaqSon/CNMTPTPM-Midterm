@@ -34,7 +34,6 @@ class App extends Component {
     this.SetRequestDetail(record);
   }
 
-
   send = () => {
     var self = this;
     const socket = socketIoClient(self.state.endpoint, {
@@ -122,18 +121,20 @@ class App extends Component {
                       {detail.info? detail.info: ""}
                     </ListGroupItemText>
                   </ListGroupItem>
-                  <ListGroupItem>
-                    <Input type="text" name="address" placeholder="Input address here to indentify location..."></Input>
+                  {/* <ListGroupItem>
+                    <Input value={detail.address} type="text" name="address" placeholder="Input address here to indentify location..."></Input>
                     <br></br>
-                    <Button color="info">Identify</Button>
-                  </ListGroupItem>
+                    <Button color="info" onClick={this.IdentityLocation(detail.address)}>Identify</Button>
+                  </ListGroupItem> */}
                 </ListGroup>
               </div>
             </Col>
           </Row>
         </div >
         <div className="maps-container">
-          <MapContainer></MapContainer>
+          <MapContainer
+            address={detail.address}
+          ></MapContainer>
         </div>
       </div >
     );
