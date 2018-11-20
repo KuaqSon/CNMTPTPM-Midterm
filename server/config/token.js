@@ -8,7 +8,7 @@ var db = require('./db');
 var User = require('../dbQuery/getUsers');
 
 const SECRETKEY = 'TAODEP';
-const AC_LIFETIME = 500;
+const AC_LIFETIME = 50000;
 
 exports.generateAccessToken = userEntity => {
     var payload = {
@@ -24,7 +24,8 @@ exports.generateAccessToken = userEntity => {
 
 exports.verifyAccessToken = (req, res, next) => {
     var token = req.headers['x-access-token'];
-    console.log(token);
+    // var token = 
+    // console.log(token);
 
     if (token) {
         jwt.verify(token, SECRETKEY, (err, payload) => {
@@ -36,7 +37,7 @@ exports.verifyAccessToken = (req, res, next) => {
                 })
             } else {
                 req.token_payload = payload;
-                next;
+                next();
             }
         });
     } else {

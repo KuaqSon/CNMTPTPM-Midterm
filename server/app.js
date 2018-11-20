@@ -12,26 +12,21 @@ const http = require('http');
 const server = http.Server(app);
 const Requestdb = require('./dbQuery/getRequest');
 const cors = require('cors');
+const Cookie = require('cookies');
+// const verifyAccessToken = require('./config/token').verifyAccessToken;
 
-// io.on('connection', (client) => {
-//     client.on('subscribeToTimer', (interval) => {
-//         console.log('client is subscribing to timer with interval ', interval);
-//         setInterval(() => {
-//             client.emit('timer', new Date());
-//         }, interval);
-//     });
-// });
 
-var whitelist = ['http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004']
-var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
+
+// var whitelist = ['http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004']
+// var corsOptions = {
+//   origin: function (origin, callback) {
+//     if (whitelist.indexOf(origin) !== -1) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error('Not allowed by CORS'))
+//     }
+//   }
+// }
 
 var app = express();
 
@@ -65,8 +60,8 @@ app.use(require('express-session')({
 app.use(session({
     secret: 'keyboard cat',
     resave: true,
-    saveUninitialized: true
-    //cookie: { secure: true }
+    saveUninitialized: true,
+    cookie: { secure: true }
 }))
 
 
@@ -79,11 +74,12 @@ app.use(function (req, res, next) {
     next();
 });
 
-require('./config/passport')(passport);
+// require('./config/passport')(passport);
 
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
+
 
 // function ensureAuthenticated(req, res, next) {
 //     if (req.isAuthenticated()) { return next(); }
@@ -113,8 +109,18 @@ const io = socketIo(server, {
     serveClient: false,
     pingInterval: 5000,
     pingTimeout: 2000,
-    cookie: false
+    cookie: false,
+    transports: [
+        'websocket', 
+        'flashsocket', 
+        'htmlfile', 
+        'xhr-polling', 
+        'jsonp-polling', 
+        'polling'
+      ]
 });
+
+// io.set('transports', ["websocket", "polling"]);
 const port1 = 3001;
 const port2 = 3002
 
@@ -134,18 +140,11 @@ const getApiAndEmit = async socket => {
         .then(rows => {
             var data = JSON.stringify(rows);
             res = data;
-            // io.sockets.emit("get data", data);
-            // console.log('User get data');
-            // socket.emit("get data", data);
-            // console.log(res);
             try {
                 socket.emit("get data", res);
-                    // console.log(res);
-        
             } catch (error) {
                 console.error(`Error: ${error.code}`);
             }
-            console.log("Get data!");
         }).catch(err => {
             console.log(err);
             res.statusCode = 500;
@@ -167,7 +166,7 @@ const getApiAndEmit = async socket => {
 // io2.on('connect', function (socket) {
 
 // });
-
+// app.use(app.router);
 function normalizePort(val) {
     var port = parseInt(val, 10);
 
@@ -187,6 +186,7 @@ function normalizePort(val) {
 var port = normalizePort(process.env.PORT || '3000');
 
 
-server.listen(port, function () {
+
+app.listen(port, function () {
     console.log('Sever started on port ' + port);
 });

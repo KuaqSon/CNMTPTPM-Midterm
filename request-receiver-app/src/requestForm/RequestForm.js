@@ -10,11 +10,11 @@ class RequestForm extends Component {
         super();
         var self = this;
         self.handleSubmit = self.handleSubmit.bind(self);
-        // this.state={ name:"", telephone:""} 
-        // this.name = React.createRef();
-        // self.telephone = React.createRef();
-        // self.address = React.createRef();
-        // self.infor = React.createRef();
+        // self.state = {
+        //     headers:'',
+        //     refresh_token:'',
+        //     access_token:''
+        // }
 
     }
 
@@ -30,21 +30,35 @@ class RequestForm extends Component {
             "address": self.address.value,
             "infor": self.infor.value
         }
-        console.log(data);
-        console.log(JSON.stringify(data));
-        console.log(this.name.value);
+        // console.log(data);
+        // console.log(JSON.stringify(data));
+        // console.log(this.name.value);
 
-        fetch('http://localhost:3002/request/add', {
+        const session = {
+            email: localStorage.getItem('email'),
+            token: localStorage.getItem('access_token')
+        }
+
+        const h = new Headers();
+        h.append('Content-Type','application/json' );
+
+        if(session.email && session.token){
+            // eslint-disable-next-line no-unused-expressions
+            h.append('x-access-token', session.token),
+            h.append('email', session.email )
+        };
+
+        fetch('http://localhost:3000/request/add', {
             method: 'POST',
             // mode: 'noCORS',
             body: JSON.stringify(data),
-            headers: {
-                // 'Authorization': `bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
+            headers: h
         })
     }
 
+    componentDidMount(){
+
+    }
     // componentDidMount() {
     //     // fetch("https://jsonplaceholder.typicode.com/users")
     //     fetch("http://localhost:3000/receivers/add", {

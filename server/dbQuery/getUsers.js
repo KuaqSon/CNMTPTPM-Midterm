@@ -18,7 +18,7 @@ exports.findUserByID = (id) => {
 
 
 exports.addUser = (name, email, auth, username, password, isDelete) => {
-	var sql = 'insert into user value (default,"'+ name +'","'+ email +'","' + auth +'","'+ username +'","'+ password +'",default,"' + isDelete + '")';
+	var sql = 'insert into user value (default,"'+ name +'","'+ email +'","' + auth +'","'+ username +'","'+ password +'",default, default, default)';
 	return db.load(sql);
 };
 
