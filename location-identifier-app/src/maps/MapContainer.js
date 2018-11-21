@@ -32,12 +32,6 @@ export class MapContainer extends Component {
       isGeocodingError : false,
     };
   }
-  // getInitialState() {
-  //   return {
-  //     isGeocodingError: false,
-  //     foundAddress: INITIAL_LOCATION.address
-  //   };
-  // }
 
   geocodeAddress = (address) => {
     this.geocoder.geocode({ 'address': address }, (results, status) => {
@@ -52,6 +46,12 @@ export class MapContainer extends Component {
         this.map.setCenter(results[0].geometry.location);
         this.marker.setPosition(results[0].geometry.location);
         
+        // const lat= results[0].geometry.location.lat();
+        // const lng= results[0].geometry.location.lng();
+
+        // console.log("lat: " + lat);
+        // console.log("lng: " + lng);
+
         return;
       }
 
@@ -99,8 +99,22 @@ export class MapContainer extends Component {
         lng: INITIAL_LOCATION.position.longitude
       }
     });
-
+    
     this.geocoder = new this.props.google.maps.Geocoder();
+    this.props.google.maps.event.addListener(this.map, 'click', (event) => {
+      this.geocoder.geocode({
+        'latLng': event.latLng
+      }, (results, status) => {
+        if (status == this.props.google.maps.GeocoderStatus.OK) {
+          console.log(results[0].formatted_address);
+          this.marker.setPosition(results[0].geometry.location);
+          this.setState({
+            foundAddress: results[0].formatted_address,
+            isGeocodingError: false
+          });
+        }
+      });
+    });
   }
 
   setSearchInputElementReference = (inputReference) => {
@@ -122,7 +136,6 @@ export class MapContainer extends Component {
                 <div className="col-xs-8 col-sm-10">
 
                   <div className="form-group">
-                    {/* <label className="sr-only" htmlFor="address">Address</label> */}
                     <input defaultValue={this.props.address ? this.props.address : ""} type="text" className="form-control input-lg" id="address" placeholder="London, United Kingdom" ref={this.setSearchInputElementReference} required />
                   </div>
 
