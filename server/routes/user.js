@@ -5,7 +5,7 @@ var bcrypt = require('bcrypt');
 var passport = require('passport');
 const authToken = require('../config/token');
 const Cookie = require('cookies');
-const userRefreshTokenExt = require('userRefreshTokenExt');
+const userRefreshTokenExt = require('../dbQuery/getUserRefreshToken');
 
 // var JSON
 // var UserSchema = require('../models/User');
@@ -101,11 +101,14 @@ router.post('/add-user', function (req, res) {
         })
 });
 
-router.post('/updateToken/', function (req, res) {
+router.post('/updateToken', function (req, res) {
     const id = req.body.id;
     const rfToken = req.body.rfToken;
-
-    userRefreshTokenExt = userRefreshTokenExt.findUserByID(id)
+    console.log(rfToken);
+    userRefreshTokenExt.findUserByID(req.body.id)
+        // .then(row => {
+        //     return row;
+        // })
         .then(row => {
             if (isEmpty(row)) {
                 res.json({
@@ -113,8 +116,8 @@ router.post('/updateToken/', function (req, res) {
                 });
                 res.statusCode = 401;
             } else {
-                if (row[0].refresh_token == rfToken) {
-                    User.findUserByID(userID)
+                if (row[0].rfToken == rfToken) {
+                    User.findUserByID(id)
                         .then(rows => {
                             var acToken = authToken.generateAccessToken(rows[0]);
                             res.json({
@@ -126,29 +129,18 @@ router.post('/updateToken/', function (req, res) {
                     // var acToken = authToken.generateAccessToken(row);
 
                 }
-                // userRefreshTokenExt.findUserByID(id)
-                // .then(userExt => {
-                //     if(isEmpty(userExt)){
-                //         res.json({
-                //             msg: error
-                //         });
-                //         res.statusCode = 401;
-                //     } else {
-                //         var acToken = authToken.generateAccessToken(row);
-
-                //     }
-                // })
             }
-
         })
-
+        .catch(err => {
+            console.log(err);
+        });
 })
 
 
 router.post('/edit-user/:id', function (req, res) {
     // console.log(req.params.name);
 
-    var userID = req.params.id;
+    var userId = req.params.id;
     var username = req.body.username;
     var name = req.body.name;
     var password = req.body.password;
@@ -164,7 +156,7 @@ router.post('/edit-user/:id', function (req, res) {
             }
             else {
                 var userTemp = {
-                    id: userID,
+                    id: userId,
                     name: name,
                     email: email,
                     username: username,

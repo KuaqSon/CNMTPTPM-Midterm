@@ -20,7 +20,7 @@ router.get('/',auth, function (req, res) {
 });
 
 
-router.post('/add', function (req, res) {
+router.post('/add',auth , function (req, res) {
     var name = req.body.name;
     var telephone = req.body.telephone;
     var address = req.body.address;

@@ -11,7 +11,7 @@ exports.findByTelephone = (telephoneNumber) =>{
 };
 
 exports.findByName = (name) =>{
-	var sql = 'select * from request where name = ' + name;
+	var sql = 'select * from request where name = "' + name+ ' " ';
 	return db.load(sql);
 };
 
@@ -26,11 +26,11 @@ exports.edit = (id, telephoneNumber, name , address, infor) =>{
 }
 
 exports.addRequest = (name, telephoneNumber, address, infor) =>{
-	var sql = 'insert into request value (default, ' + telephoneNumber + ', "'+ name +'", "' + address + '" , "'+ infor +'", default, default, default)';
+	var sql = 'insert into request value (default, ' + telephoneNumber + ', "'+ name +'", "' + address + '" , "'+ infor +'", 1 , default, default)';
 	return db.load(sql);
 }
 
 exports.setState = (id, state) => {
-	var sql = 'update request set state = ' + state + ' where id = ' + id;
+	var sql = 'update request set state = "' + state + '" where id = ' + id;
 	return bd.load(sql);
 }
