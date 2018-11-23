@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './RequestForm.css';
 import { Col, Row, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import axios from 'axios';
-// import auth from '../config/auth';
+import authRfToken from '../config/auth';
 
 class RequestForm extends Component {
 
@@ -32,22 +32,16 @@ class RequestForm extends Component {
             "address": self.address.value,
             "infor": self.infor.value
         }
-        // console.log(data);
-        // console.log(JSON.stringify(data));
-        // console.log(this.name.value);
-
         const session = {
             email: localStorage.getItem('email'),
             token: localStorage.getItem('x-access-token')
         }
-
         const h = new Headers();
         h.append('Content-Type', 'application/json');
 
         if (session.email && session.token) {
-            // eslint-disable-next-line no-unused-expressions
-            h.append('x-access-token', session.token),
-                h.append('email', session.email)
+            h.append('x-access-token', session.token);
+            h.append('email', session.email);
         };
 
         fetch('http://localhost:3000/request/add', {
@@ -60,10 +54,60 @@ class RequestForm extends Component {
         })
             .then((res) => {
                 console.log(res);
-                // if (res.statusCode === 401){
-                //     self.upDateToken();
-                //     self.handleSubmit();
-                // };
+                console.log(res.msg);
+                if (res.msg  === "INVALID TOKEN"){
+
+                    const rfToken = localStorage.getItem('refresh_token');
+                    const id = localStorage.getItem('id');
+                    const dataRfToken = {
+                        id: id,
+                        rfToken: rfToken
+                    }
+                    fetch('http://localhost:3000/users/updateToken', {
+                        method: 'POST',
+                        body: JSON.stringify(dataRfToken),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(function (res) {
+                        return res.json();
+                    }).then((res) => {
+                        if (res.auth === true) {
+
+                            localStorage.setItem('x-access-token', res.access_token);
+                            
+                            const sessionT = {
+                                email: localStorage.getItem('email'),
+                                token: localStorage.getItem('x-access-token')
+                            }
+
+                            const hT = new Headers();
+                            hT.append('Content-Type', 'application/json');
+                    
+                            if (sessionT.email && sessionT.token) {
+                                hT.append('x-access-token', sessionT.token);
+                                hT.append('email', sessionT.email);
+                            };
+
+                            fetch('http://localhost:3000/request/add', {
+                                method: 'POST',
+                                // mode: 'noCORS',
+                                body: JSON.stringify(data),
+                                headers: hT
+                            }).then(function (res) {
+                                return res.json();
+                            })
+                                .then((res) => {
+                                    console.log(res);
+                                    
+                                    // console.log(res.msg);
+                                })
+                        } else {
+                            localStorage.setItem('auth', false);
+                            
+                        }
+                    })
+                };
                 if(res.statusCode === 403){
                     localStorage.setItem("auth", false);
                 }
@@ -71,30 +115,34 @@ class RequestForm extends Component {
     }
 
     componentDidMount() {
-
+        // authRfToken();
     }
 
-    
-    // componentDidMount() {
-    //     // fetch("https://jsonplaceholder.typicode.com/users")
-    //     fetch("http://localhost:3000/receivers/add", {
-    //         method: "POST",
-    //         // mode: 'no-cors',
-    //         headers: {
-    //             'Accept': 'application/json',
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify({
 
-    //         })
-    //     }).then(res => res.json())
-    //         // .then(parsedJSON => console.log(parsedJSON))
-    //         .then(json => this.setState({
-    //             items: json,
-    //             isLoader: false
-    //         }))
-    //         .catch(err => console.log(err));
-    // }
+    updateToken(){
+        const rfToken = localStorage.getItem('refresh_token');
+        const id = localStorage.getItem('id');
+        const data = {
+            id: id,
+            rfToken: rfToken
+        }
+        fetch('http://localhost:3000/user/updateToken', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (res) {
+            return res;
+        }).then((res) => {
+            if (res.auth === true) {
+                localStorage.setItem('x-access-token', res.access_token);
+            } else {
+                localStorage.setItem('auth', false);
+            }
+        })
+    }
+    
 
 
     render() {

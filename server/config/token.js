@@ -9,7 +9,7 @@ var db = require('./db');
 var User = require('../dbQuery/getUsers');
 
 const SECRETKEY = 'TAODEP';
-const AC_LIFETIME = 15;
+const AC_LIFETIME = 30;
 
 exports.generateAccessToken = userEntity => {
     var payload = {

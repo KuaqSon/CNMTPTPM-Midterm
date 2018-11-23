@@ -51,6 +51,8 @@ router.post('/add-user', function (req, res) {
     var password = req.body.password;
     var email = req.body.email;
     var auth = 0;
+    var lat = req.body.lat;
+    var log = req.body.log;
 
     // console.log(name);
     // console.log(req.body.name);    
@@ -69,7 +71,9 @@ router.post('/add-user', function (req, res) {
                     username: username,
                     password: password,
                     auth: auth,
-                    isDelete: 0
+                    isDelete: 0,
+                    lat: lat,
+                    log: log
                     // created: created
                 };
                 console.log(name);
@@ -79,7 +83,7 @@ router.post('/add-user', function (req, res) {
                             console.log(err);
                         else {
                             userTemp.password = hash;
-                            User.addUser(userTemp.name, userTemp.email, userTemp.auth, userTemp.username, userTemp.password, userTemp.isDelete)
+                            User.addUser(userTemp.name, userTemp.email, userTemp.auth, userTemp.username, userTemp.password, userTemp.lat, userTemp.log)
                                 .then(user => {
                                     res.json(user);
                                     console.log('Add successfully!');
@@ -106,9 +110,6 @@ router.post('/updateToken', function (req, res) {
     const rfToken = req.body.rfToken;
     console.log(rfToken);
     userRefreshTokenExt.findUserByID(req.body.id)
-        // .then(row => {
-        //     return row;
-        // })
         .then(row => {
             if (isEmpty(row)) {
                 res.json({
@@ -126,8 +127,6 @@ router.post('/updateToken', function (req, res) {
                                 access_token: acToken
                             })
                         })
-                    // var acToken = authToken.generateAccessToken(row);
-
                 }
             }
         })
@@ -185,39 +184,33 @@ router.post('/edit-user/:id', function (req, res) {
 });
 
 
-router.get('/login', function (req, res) {
+// router.get('/login', function (req, res) {
 
-    if (res.locals.user) res.redirect('/');
+//     if (res.locals.user) res.redirect('/');
 
-    // res.render('login', {
-    //     title: 'Log in'
-    // });
+//     // res.render('login', {
+//     //     title: 'Log in'
+//     // });
 
-});
+// });
 
 
 // Post log in
 
 router.post('/login', function (req, res) {
 
-    // console.log(req.body.username);
     User.findUser(req.body.username)
         .then(rows => {
-            // console.log(rows);
             var temp = rows;
             if (isEmpty(temp)) {
                 return res.json({
                     msg: 'No user found!'
                 });
-                // return next(null, false, { message: 'No user found!' });
             }
             else {
-                // console.log(rows[0].password);
                 bcrypt.compare(req.body.password, rows[0].password, function (err, isMatch) {
                     if (isMatch) {
                         var userEntity = rows[0];
-                        // console.log(userEntity);
-
                         var acToken = authToken.generateAccessToken(userEntity);
                         var rfToken = authToken.generateRefreshToken();
                         authToken.updateRefreshToken(userEntity.id, rfToken)
@@ -228,33 +221,21 @@ router.post('/login', function (req, res) {
                                     access_token: acToken,
                                     refresh_token: rfToken
                                 });
-
-
                             })
                             .catch(err => {
                                 console.log(err);
                                 res.statusCode = 500;
                             })
-                        // return next(null, rows[0]);
                     }
                     else
                         return res.json({
                             msg: 'Wrong password!'
                         });
-                    // return next(null, false, { message: 'Wrong password.' });
                 });
             }
         }).catch(err => {
             console.log(err);
         });
-
-    // passport.authenticate('local', {
-    //     successRedirect: '/',
-    //     // failureRedirect: '/users/login',
-    //     failureFlash: true
-    // })(req, res, next);
-
-
 });
 
 

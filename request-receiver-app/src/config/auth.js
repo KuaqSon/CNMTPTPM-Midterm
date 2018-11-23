@@ -1,6 +1,6 @@
 
 
-exports.updateToken = (next) => {
+export default function updateToken(){
     const rfToken = localStorage.getItem('refresh_token');
     const id = localStorage.getItem('id');
     const data = {
@@ -14,11 +14,10 @@ exports.updateToken = (next) => {
             'Content-Type': 'application/json'
         }
     }).then(function (res) {
-        return res.json();
+        return res;
     }).then((res) => {
-        if (res.auth === false) {
+        if (res.auth === true) {
             localStorage.setItem('x-access-token', res.access_token);
-            next();
         } else {
             localStorage.setItem('auth', false);
         }

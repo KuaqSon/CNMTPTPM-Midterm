@@ -17,8 +17,8 @@ exports.findUserByID = (id) => {
 
 
 
-exports.addUser = (name, email, auth, username, password, isDelete) => {
-	var sql = 'insert into user value (default,"'+ name +'","'+ email +'","' + auth +'","'+ username +'","'+ password +'",default, default, default)';
+exports.addUser = (name, email, auth, username, password, lat, log) => {
+	var sql = 'insert into user value (default,"'+ name +'","'+ email +'","' + auth +'","'+ username +'","'+ password +'",default,'+ lat + ','+ log +', default, default)';
 	return db.load(sql);
 };
 
@@ -27,3 +27,12 @@ exports.Update = (id, name, email, auth, username, password) => {
 	return db.load(sql);
 };
 
+exports.deleteUser = (id)=>{
+	var sql = 'update user set isDelete = 1 where id = '+ id;
+	return db.load(sql);
+}
+
+exports.loadUser = () => {
+	var sql = 'select * from user where isDelete = 0';
+	return db.load(sql);
+}
