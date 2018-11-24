@@ -82,10 +82,20 @@ class Driver extends Component {
     });
 
     // Check if we're at zero.
-    if (seconds == 0) {
+    if (seconds === 0) {
       clearInterval(this.timer);
       this.handleModalVisible();
     }
+  }
+
+  
+
+  handleModalVisible = () => {
+    this.setState({
+      modalVisible: !this.state.modalVisible,
+    });
+    const id = localStorage.getItem("id");
+
   }
 
   handleStatusChange = () => {
@@ -107,15 +117,7 @@ class Driver extends Component {
 
     }
   }
-
-  handleModalVisible = () => {
-    this.setState({
-      modalVisible: !this.state.modalVisible,
-    });
-
-
-  }
-
+// Change status of driver
   changeState = () => {
     const self = this;
     const id = localStorage.getItem("id");

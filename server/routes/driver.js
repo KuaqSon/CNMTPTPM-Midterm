@@ -14,12 +14,27 @@ router.post('/caculator', function(req, res){
     // var log = req.body.log;
 })
 
+router.post('/accept', function(req, res){
+    var idRequest = req.body.idRequest;
+    var idDriver = req.body.idDriver;
+    Request.accept(idRequest, idDriver)
+    then(load => {
+        res.json({
+            msg: 'success'
+        })
+    }).catch(err => {
+        console.log(err);
+        res.statusCode = 500;
+        res.end('Erro');
+    })
+})
+
 router.post('/state', function(req, res){
     var id = req.body.id;
     var state = req.body.state;
     User.changeStateDriver(id, state)
     .then(load=> {
-        console.log(state);
+        // console.log(state);
         res.json({
             msg: load
         })

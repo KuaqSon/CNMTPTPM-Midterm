@@ -121,29 +121,29 @@ class RequestForm extends Component {
     }
 
 
-    updateToken(){
-        const rfToken = localStorage.getItem('refresh_token');
-        const id = localStorage.getItem('id');
-        const data = {
-            id: id,
-            rfToken: rfToken
-        }
-        fetch('http://localhost:3000/user/updateToken', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(function (res) {
-            return res;
-        }).then((res) => {
-            if (res.auth === true) {
-                localStorage.setItem('x-access-token', res.access_token);
-            } else {
-                localStorage.setItem('auth', false);
-            }
-        })
-    }
+    // updateToken(){
+    //     const rfToken = localStorage.getItem('refresh_token');
+    //     const id = localStorage.getItem('id');
+    //     const data = {
+    //         id: id,
+    //         rfToken: rfToken
+    //     }
+    //     fetch('http://localhost:3000/user/updateToken', {
+    //         method: 'POST',
+    //         body: JSON.stringify(data),
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         }
+    //     }).then(function (res) {
+    //         return res;
+    //     }).then((res) => {
+    //         if (res.auth === true) {
+    //             localStorage.setItem('x-access-token', res.access_token);
+    //         } else {
+    //             localStorage.setItem('auth', false);
+    //         }
+    //     })
+    // }
     
 
 
@@ -157,18 +157,6 @@ class RequestForm extends Component {
                     <br></br>
                     Take car
             </div>
-            
-
-                {/* {items.map(item => (
-                    <li key={item.id}>
-                        => Name: {item.name}
-                        Telephone: {item.telephone}
-                        Address: {item.address}
-                        Infor: {item.infor}
-
-                    </li>
-
-                ))} */}
                 <Form className="form-container" onSubmit={self.handleSubmit}>
 
                     <Row form>

@@ -6,6 +6,12 @@ exports.loadAll = () => {
 	return db.load(sql);
 };
 
+exports.joinTable = () => {
+	// var sql = 'select request.id, request.name, request.address, request.infor, request.state, request.lat, request.log, request.idUser, request.idDriver, user.name, user.address, user.lat, user.log from request left join user on request.idDriver = user.id order by request.created desc';
+	var sql = 'select world.request.*, world.user.name as nameDriver, world.user.lat as latDriver, world.user.log as logDriver, world.user.address as addressDriver from world.request, world.user where world.request.idDriver = world.user.id order by world.request.created desc'
+	return db.load(sql);
+}
+
 exports.loadRequest = () => {
 	var sql = 'select * from request where isDelete = 0';
 	return db.load(sql);
@@ -17,7 +23,7 @@ exports.loadRequestNew = () => {
 }
 
 exports.accept = (idRequest, idDriver) => {
-	var sql = 'update request set state = 1, idDriver = '+ idDriver +' where id = '+ idRequest +' and state = 0';
+	var sql = 'update request set state = 1, idDriver = '+ idDriver +' where id = '+ idRequest +' and state = 1';
 	return db.load(sql);
 }
 
