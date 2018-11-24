@@ -1,43 +1,43 @@
 import React, { Component } from 'react';
 import MapContainer from './maps/MapContainer';
 import './App.css';
-import { 
-  Col, 
-  Row, 
-  Button, 
-  Form, 
-  FormGroup, 
-  Label, 
-  Input, 
-  FormText, 
-  Progress , 
-  Badge, 
-  ListGroup, 
-  ListGroupItem, 
-  ListGroupItemHeading, 
-  Modal,  
+import {
+  Col,
+  Row,
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  FormText,
+  Progress,
+  Badge,
+  ListGroup,
+  ListGroupItem,
+  ListGroupItemHeading,
+  Modal,
 } from 'reactstrap';
 
 
 class Driver extends Component {
   constructor(props) {
     super(props)
-    this.state = { 
-      status: false, 
+    this.state = {
+      status: false,
       statusText: "STANDBY",
       modalVisible: false,
-      time: {}, 
+      time: {},
       seconds: 10
     }; // pass data here 
 
     this.timer = 0;
     this.startTimer = this.startTimer.bind(this);
     this.countDown = this.countDown.bind(this);
-    this.handleStatusChange = this.handleStatusChange.bind(this);  
+    this.handleStatusChange = this.handleStatusChange.bind(this);
     this.handleModalVisible = this.handleModalVisible.bind(this);
-}
+  }
 
-  secondsToTime(secs){
+  secondsToTime(secs) {
     let hours = Math.floor(secs / (60 * 60));
 
     let divisor_for_minutes = secs % (60 * 60);
@@ -54,10 +54,12 @@ class Driver extends Component {
     return obj;
   }
 
-  // componentDidMount() {
-  //   let timeLeftVar = this.secondsToTime(this.state.seconds);
-  //   this.setState({ time: timeLeftVar });
-  // }
+  componentDidMount() {
+    // let timeLeftVar = this.secondsToTime(this.state.seconds);
+    // this.setState({ time: timeLeftVar });
+
+  }
+  
 
   startTimer() {
     this.setState({
@@ -78,9 +80,9 @@ class Driver extends Component {
       time: this.secondsToTime(seconds),
       seconds: seconds,
     });
-    
+
     // Check if we're at zero.
-    if (seconds == 0) { 
+    if (seconds == 0) {
       clearInterval(this.timer);
       this.handleModalVisible();
     }
@@ -92,11 +94,17 @@ class Driver extends Component {
         status: false,
         statusText: "STANDBY"
       })
+      localStorage.setItem('state', 0);
+      this.changeState();
+
     } else {
       this.setState({
         status: true,
         statusText: "READY"
       })
+      localStorage.setItem('state', 1);
+      this.changeState();
+
     }
   }
 
@@ -104,16 +112,108 @@ class Driver extends Component {
     this.setState({
       modalVisible: !this.state.modalVisible,
     });
+
+
   }
+
+  changeState = () => {
+    const self = this;
+    const id = localStorage.getItem("id");
+    const state = localStorage.getItem("state");
+    const data = {
+      id: id,
+      state: state
+    }
+    const session = {
+      email: localStorage.getItem('email'),
+      token: localStorage.getItem('x-access-token')
+    }
+    const h = new Headers();
+    h.append('Content-Type', 'application/json');
+
+    if (session.email && session.token) {
+      h.append('x-access-token', session.token);
+      h.append('email', session.email);
+    };
+
+    fetch('http://localhost:3000/driver/state', {
+      method: 'POST',
+      // mode: 'noCORS',
+      body: JSON.stringify(data),
+      headers: h
+    }).then(function (res) {
+      return res.json();
+    })
+      .then((res) => {
+        console.log(res);
+        console.log(res.msg);
+        if (res.msg === "INVALID TOKEN") {
+
+          const rfToken = localStorage.getItem('refresh_token');
+          const id = localStorage.getItem('id');
+          const dataRfToken = {
+            id: id,
+            rfToken: rfToken
+          }
+          fetch('http://localhost:3000/users/updateToken', {
+            method: 'POST',
+            body: JSON.stringify(dataRfToken),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }).then(function (res) {
+            return res.json();
+          }).then((res) => {
+            if (res.auth === true) {
+
+              localStorage.setItem('x-access-token', res.access_token);
+              // self.updateToken()
+              const sessionT = {
+                email: localStorage.getItem('email'),
+                token: localStorage.getItem('x-access-token')
+              }
+
+              const hT = new Headers();
+              hT.append('Content-Type', 'application/json');
+
+              if (sessionT.email && sessionT.token) {
+                hT.append('x-access-token', sessionT.token);
+                hT.append('email', sessionT.email);
+              };
+
+              fetch('http://localhost:3000/driver/state', {
+                method: 'POST',
+                // mode: 'noCORS',
+                body: JSON.stringify(data),
+                headers: hT
+              }).then(function (res) {
+                return res.json();
+              })
+                .then((res) => {
+                  console.log(res);
+                })
+            } else {
+              localStorage.setItem('auth', false);
+
+            }
+          })
+        };
+        if (res.statusCode === 403) {
+          localStorage.setItem("auth", false);
+        }
+      })
+  }
+
+
 
   render() {
     return (
       <div className="App">
         <div className="app-container">
           <Row onClick={() => this.handleModalVisible()}>
-            <Col md={4} sm={6}> 
+            <Col md={4} sm={6}>
               <div className="brand-logo">
-                Doubble Son 
+                Doubble Son
                 <br></br>
                 Take car
               </div>
@@ -121,11 +221,11 @@ class Driver extends Component {
           </Row>
 
           <div>
-            <Modal 
-            isOpen={this.state.modalVisible} 
-            toggle={this.handleModalVisible} 
-            onOpened={this.startTimer}
-            centered={true}
+            <Modal
+              isOpen={this.state.modalVisible}
+              toggle={this.handleModalVisible}
+              onOpened={this.startTimer}
+              centered={true}
             >
               <div className="request-modal">
                 <div className="request-modal-content">
@@ -139,8 +239,8 @@ class Driver extends Component {
                   </div>
                 </div>
                 <div>
-                <Button color="primary" onClick={this.handleModalVisible}>Accept {this.state.time.s}</Button>{' '}
-                <Button color="secondary" onClick={this.handleModalVisible}>Cancel</Button>
+                  <Button color="primary" onClick={this.handleModalVisible}>Accept {this.state.time.s}</Button>{' '}
+                  <Button color="secondary" onClick={this.handleModalVisible}>Cancel</Button>
                 </div>
               </div>
             </Modal>
@@ -150,21 +250,21 @@ class Driver extends Component {
             <Col md={3} sm={6}>
               <div className="info-container driver-status-card">
                 <div className="card-info-header">
-                  Trạng thái 
+                  Trạng thái
                 </div>
 
                 <div className="status-info">
                   <Row className="align-items-center no-gutters">
                     <Col>
                       <label className="switch">
-                        <input type="checkbox" checked={this.state.status} onChange={() => this.handleStatusChange()}/>
+                        <input type="checkbox" checked={this.state.status} onChange={() => this.handleStatusChange()} />
                         <span className="slider round"></span>
                       </label>
                     </Col>
                     <Col>
                       <Badge color={this.state.status == true ? "primary" : "danger"} className="info-badge">
                         {this.state.statusText}
-                      </Badge>  
+                      </Badge>
                     </Col>
                   </Row>
                 </div>
@@ -174,27 +274,27 @@ class Driver extends Component {
               <div className="info-container ride-info-card">
                 <div className="card-info-header">
                   Thông tin
-                  <br/>
+                  <br />
                   chuyến đi
                 </div>
 
                 <div className="status-info">
-                    <div className="mb-3 mt-2">
-                      <Progress value={75}/>
-                      <div className="text-center">
-                        <Badge color="dark" className="info-badge mt-2">
-                          75%
+                  <div className="mb-3 mt-2">
+                    <Progress value={75} />
+                    <div className="text-center">
+                      <Badge color="dark" className="info-badge mt-2">
+                        75%
                         </Badge>
-                      </div>
                     </div>
-                    <Badge color="success" className="info-badge mb-2">
-                      Tổng cộng: 9Km
+                  </div>
+                  <Badge color="success" className="info-badge mb-2">
+                    Tổng cộng: 9Km
                     </Badge>
-                    <Badge color="info" className="info-badge mb-2">
-                      Hoàn Thành: 5Km
+                  <Badge color="info" className="info-badge mb-2">
+                    Hoàn Thành: 5Km
                     </Badge>
-                    <Badge color="warning" className="info-badge mb-2">
-                      Còn lại: 4Km
+                  <Badge color="warning" className="info-badge mb-2">
+                    Còn lại: 4Km
                     </Badge>
                 </div>
               </div>
@@ -202,14 +302,14 @@ class Driver extends Component {
             <Col md={3} sm={6}>
               <div className="info-container request-info-card">
                 <div className="card-info-header">
-                  Khách hàng 
-                  <br/>
+                  Khách hàng
+                  <br />
                   Trần Thị B
                 </div>
 
                 <div className="card-bottom-content">
-                  Lorem Ipsum has 
-                  been the industry's standard 
+                  Lorem Ipsum has
+                  been the industry's standard
                   dummy text ever since the 1500s
                 </div>
               </div>
@@ -218,13 +318,13 @@ class Driver extends Component {
               <div className="info-container driver-info-card">
                 <div className="card-info-header">
                   Tài xế
-                  <br/>
+                  <br />
                   Nguyễn Văn A
                 </div>
 
                 <div className="card-bottom-content">
-                  Lorem Ipsum has 
-                  been the industry's standard 
+                  Lorem Ipsum has
+                  been the industry's standard
                   dummy text ever since the 1500s
                 </div>
               </div>
@@ -238,5 +338,8 @@ class Driver extends Component {
     );
   }
 }
+
+
+
 
 export default Driver;

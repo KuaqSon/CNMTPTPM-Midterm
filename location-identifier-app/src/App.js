@@ -19,8 +19,14 @@ class App extends Component {
 
   componentDidMount() {
     const self = this;
-    const { endpoint } = self.state;
+    const  endpoint  = self.state.endpoint;
     const socket = socketIoClient(endpoint);
+    console.log(endpoint, {
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 2000,
+      reconnectionAttempts: 5,
+    });
     socket.on("get data", data => self.setState({ res: JSON.stringify(data) }));
     console.log(self.state.res);
   };
@@ -44,7 +50,8 @@ class App extends Component {
     });
     socket.on("get data", (data) => {
       self.setState({ res: data });
-      console.log(data);
+      // console.log(data);
+      
     });
 
   }

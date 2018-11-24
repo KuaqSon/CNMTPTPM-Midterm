@@ -4,12 +4,13 @@ var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var user = require('./routes/user');
 var request = require('./routes/request');
+var driver = require('./routes/driver');
 var passport = require('passport');
 var session = require('express-session');
 var expressValidator = require('express-validator');
 const socketIo = require('socket.io');
 const http = require('http');
-const server = http.Server(app);
+// const server = http.Server(app);
 const Requestdb = require('./dbQuery/getRequest');
 const cors = require('cors');
 const Cookie = require('cookies');
@@ -17,16 +18,16 @@ const Cookie = require('cookies');
 
 
 
-// var whitelist = ['http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004']
-// var corsOptions = {
-//   origin: function (origin, callback) {
-//     if (whitelist.indexOf(origin) !== -1) {
-//       callback(null, true)
-//     } else {
-//       callback(new Error('Not allowed by CORS'))
-//     }
-//   }
-// }
+var whitelist = ['http://localhost:3001', 'http://localhost:3002', 'http://localhost:3003', 'http://localhost:3004']
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
 
 var app = express();
 
@@ -88,6 +89,7 @@ app.use(function (req, res, next) {
 
 app.use('/users', user);
 app.use('/request', request);
+app.use('/driver', driver);
 
 
 app.get('/', (req, res) => {
@@ -104,56 +106,18 @@ app.get('/', (req, res) => {
 // Socket listen on port 3001 
 
 
-const io = socketIo(server, {
-    path: '/',
-    serveClient: false,
-    pingInterval: 5000,
-    pingTimeout: 2000,
-    cookie: false,
-    transports: [
-        'websocket', 
-        'flashsocket', 
-        'htmlfile', 
-        'xhr-polling', 
-        'jsonp-polling', 
-        'polling'
-      ]
-});
+
 
 // io.set('transports', ["websocket", "polling"]);
 const port1 = 3001;
 const port2 = 3002
-
-io.on('connect', socket => {
-    console.log("New user connected"), setInterval(
-        () => getApiAndEmit(socket),
-        5000
-    );
-    socket.on("disconnected", () => console.log("client disconnected"));
-
-});
-
-const getApiAndEmit = async socket => {
-
-    var res;
-    Requestdb.loadAll()
-        .then(rows => {
-            var data = JSON.stringify(rows);
-            res = data;
-            try {
-                socket.emit("get data", res);
-            } catch (error) {
-                console.error(`Error: ${error.code}`);
-            }
-        }).catch(err => {
-            console.log(err);
-            res.statusCode = 500;
-            res.end('Erro');
-        });
-
-   
-}
-
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000/');
+    res.header('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+};
 
 // listen 
 // let http2 = require('http').Server(app);
@@ -185,8 +149,132 @@ function normalizePort(val) {
 
 var port = normalizePort(process.env.PORT || '3000');
 
-
-
-app.listen(port, function () {
+var server = app.listen(port, function () {
     console.log('Sever started on port ' + port);
 });
+
+const io = socketIo.listen(server
+//     ,{
+//     path: '/',
+//     serveClient: false,
+//     pingInterval: 5000,
+//     pingTimeout: 2000,
+//     cookie: false,
+//     transports: [
+//         'websocket', 
+//         'flashsocket', 
+//         'htmlfile', 
+//         'xhr-polling', 
+//         'jsonp-polling', 
+//         'polling'
+//       ]
+// }
+);
+
+const getApiAndEmitForReceiver = async socket => {
+
+    var res;
+    Requestdb.loadAll()
+        .then(rows => {
+            res = rows;
+            try {
+                socket.emit("get data", res);
+            } catch (error) {
+                console.error(`Error: ${error.code}`);
+            }
+        }).catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('Erro');
+        });
+}
+
+
+
+const getApiAndEmitForDriver = async socket =>{
+    var res;
+    var idDriver = 0;
+    Requestdb.loadRequestNew()
+    .then(rows => {
+        if(!isEmpty(rows)){
+            for(var i = 0; i< size(rows); i++){
+            const coorLocation = {
+                lat: rows[i].lat,
+                log: rows[i].log
+            }
+                idDriver = findingDriver(coorLocation, 0);
+                if(idDriver != 0){
+                    res = rows[i];
+                try {
+                    socket.emit("driver" + idDriver, res);
+                } catch (error) {
+                    console.error(`Error: ${error.code}`);
+                }
+            }
+            }
+        }
+    })
+
+
+}
+
+
+
+
+io.on('connect', socket => {
+    console.log("New user connected"); 
+    setInterval(
+        () => getApiAndEmitForReceiver(socket)
+        ,5000
+    );
+    
+    socket.on("disconnected", () => console.log("client disconnected"));
+
+});
+
+
+
+function isEmpty(obj) {
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
+function Size(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+};
+
+function findingDriver(coorLocation, idIgnor){
+    User.findDriver()
+    .then(rows => {
+        var idDriver = 0;
+        if(isEmpty(rows)){
+           return 0;
+        } else {
+            const size = Object.size(rows);
+            var coorDriver = {
+                lat: rows[0].lat,
+                log: rows[0].log
+            }
+            var minDistance = caculatorDistance(coorLocation, coorDriver);
+            for (var i = 0; i < size; i++ ){
+                coorDriver = {
+                    lat: rows[i].lat,
+                    log: rows[i].log
+                }
+                var distance = caculatorDistance(coorLocation, coorDriver);
+                if(minDistance <= distance && rows[i].id != idIgnor){
+                    idDriver = rows[i].id;
+                    minDistance = distance;
+                }
+            }
+            return idDriver;
+        }
+    })
+}
