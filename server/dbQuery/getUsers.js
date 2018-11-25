@@ -11,7 +11,7 @@ exports.loadAll = () => {
 };
 
 exports.findDriver = () => {
-	var sql = 'select user.id from user where auth = 1 and state = 1';
+	var sql = 'select * from user where auth = 1 and state = 1';
 	return db.load(sql);
 }
 

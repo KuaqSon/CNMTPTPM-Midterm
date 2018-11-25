@@ -17,24 +17,30 @@ import {
   ListGroupItemHeading,
   Modal,
 } from 'reactstrap';
-
+import socketIoClient from 'socket.io-client';
 
 class Driver extends Component {
   constructor(props) {
     super(props)
-    this.state = {
+    const self = this;
+    self.state = {
       status: false,
       statusText: "STANDBY",
       modalVisible: false,
+      // openModal: false,
       time: {},
-      seconds: 10
+      seconds: 10,
+      res: false,
+      endpoint: "http://localhost:3000"
     }; // pass data here 
 
-    this.timer = 0;
-    this.startTimer = this.startTimer.bind(this);
-    this.countDown = this.countDown.bind(this);
-    this.handleStatusChange = this.handleStatusChange.bind(this);
-    this.handleModalVisible = this.handleModalVisible.bind(this);
+    self.timer = 0;
+    self.startTimer = self.startTimer.bind(self);
+    self.countDown = self.countDown.bind(self);
+    self.handleStatusChange = self.handleStatusChange.bind(self);
+    self.handleModalVisible = self.handleModalVisible.bind(self);
+    // self.notice = self.notice.bind(self);
+    self.send = self.send.bind(self);
   }
 
   secondsToTime(secs) {
@@ -55,79 +61,139 @@ class Driver extends Component {
   }
 
   componentDidMount() {
-    // let timeLeftVar = this.secondsToTime(this.state.seconds);
-    // this.setState({ time: timeLeftVar });
+    // let timeLeftVar = self.secondsToTime(self.state.seconds);
+    // self.setState({ time: timeLeftVar });
+    const self = this;
+    var auth =localStorage.getItem('auth');
+    if(auth ==="false" || auth === null){
+      self.props.history.push('/login');
+    }
 
+    self.authRfToken();
+    self.send();
   }
   
+  send = () => {
+    var self = this;
+
+
+    const id = localStorage.getItem('idDriver');
+    const { endpoint } = self.state;
+    const socket = socketIoClient(endpoint,{
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 2000,
+      reconnectionAttempts: 5
+    });
+    socket.on('driver'+id, (data)=>{
+      self.setState({res: JSON.stringify(data)});
+      // console.log(data);
+      if(!self.isEmpty(data))
+      console.log(data);
+      self.setState({
+        modalVisible: true,
+        // openModal: true
+      })
+      // return data;
+    })
+  }
+
+  authRfToken = () =>{
+    const self =this;
+    var auth =localStorage.getItem('auth');
+    if(auth ==="false" || auth === null){
+      self.props.history.push('/login');
+    }
+  }
 
   startTimer() {
-    this.setState({
+    const self = this;
+    self.setState({
       seconds: 10,
-      time: this.secondsToTime(10)
+      time: self.secondsToTime(10)
     })
-    clearInterval(this.timer);
-    this.timer = setInterval(this.countDown, 1000);
-    // if (this.timer == 0 && this.state.seconds > 0) {
-    //   this.timer = setInterval(this.countDown, 1000);
+    clearInterval(self.timer);
+    self.timer = setInterval(self.countDown, 1000);
+    // if (self.timer == 0 && self.state.seconds > 0) {
+    //   self.timer = setInterval(self.countDown, 1000);
     // }
   }
 
   countDown() {
     // Remove one second, set state so a re-render happens.
-    let seconds = this.state.seconds - 1;
-    this.setState({
-      time: this.secondsToTime(seconds),
+    const self = this;
+    let seconds = self.state.seconds - 1;
+    self.setState({
+      time: self.secondsToTime(seconds),
       seconds: seconds,
     });
 
     // Check if we're at zero.
     if (seconds === 0) {
-      clearInterval(this.timer);
-      this.handleModalVisible();
+      clearInterval(self.timer);
+      self.handleModalVisible();
+      // self.setState({
+      //   modalVisible: false
+      // })
     }
   }
 
-  
+  isEmpty = (obj) => {
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
+
+// notice whrn new request come
+
 
   handleModalVisible = () => {
-    this.setState({
-      modalVisible: !this.state.modalVisible,
-    });
-    const id = localStorage.getItem("id");
+    const self = this;
+
+    self.setState({
+      modalVisible: false
+    })
+    // self.setState({
+    //   modalVisible: !self.state.modalVisible,
+    // });
+    // const id = localStorage.getItem("idDriver");
 
   }
 
   handleStatusChange = () => {
-    if (this.state.status) {
-      this.setState({
+    const self = this;
+    if (self.state.status) {
+      self.setState({
         status: false,
         statusText: "STANDBY"
       })
       localStorage.setItem('state', 0);
-      this.changeState();
+      self.changeState();
 
     } else {
-      this.setState({
+      self.setState({
         status: true,
         statusText: "READY"
       })
       localStorage.setItem('state', 1);
-      this.changeState();
+      self.changeState();
 
     }
   }
 // Change status of driver
   changeState = () => {
     const self = this;
-    const id = localStorage.getItem("id");
+    const id = localStorage.getItem("idDriver");
     const state = localStorage.getItem("state");
     const data = {
       id: id,
       state: state
     }
     const session = {
-      email: localStorage.getItem('email'),
+      // email: localStorage.getItem('email'),
       token: localStorage.getItem('x-access-token')
     }
     const h = new Headers();
@@ -135,7 +201,7 @@ class Driver extends Component {
 
     if (session.email && session.token) {
       h.append('x-access-token', session.token);
-      h.append('email', session.email);
+      // h.append('email', session.email);
     };
 
     fetch('http://localhost:3000/driver/state', {
@@ -152,7 +218,7 @@ class Driver extends Component {
         if (res.msg === "INVALID TOKEN") {
 
           const rfToken = localStorage.getItem('refresh_token');
-          const id = localStorage.getItem('id');
+          const id = localStorage.getItem('idDriver');
           const dataRfToken = {
             id: id,
             rfToken: rfToken
@@ -171,7 +237,7 @@ class Driver extends Component {
               localStorage.setItem('x-access-token', res.access_token);
               // self.updateToken()
               const sessionT = {
-                email: localStorage.getItem('email'),
+                // email: localStorage.getItem('email'),
                 token: localStorage.getItem('x-access-token')
               }
 
@@ -180,7 +246,7 @@ class Driver extends Component {
 
               if (sessionT.email && sessionT.token) {
                 hT.append('x-access-token', sessionT.token);
-                hT.append('email', sessionT.email);
+                // hT.append('email', sessionT.email);
               };
 
               fetch('http://localhost:3000/driver/state', {
@@ -209,10 +275,12 @@ class Driver extends Component {
 
 
   render() {
+    const self = this;
+    // self.notice();
     return (
       <div className="App">
         <div className="app-container">
-          <Row onClick={() => this.handleModalVisible()}>
+          <Row onClick={() => self.handleModalVisible()}>
             <Col md={4} sm={6}>
               <div className="brand-logo">
                 Doubble Son
@@ -224,9 +292,9 @@ class Driver extends Component {
 
           <div>
             <Modal
-              isOpen={this.state.modalVisible}
-              toggle={this.handleModalVisible}
-              onOpened={this.startTimer}
+              isOpen={self.state.modalVisible}
+              toggle={self.handleModalVisible}
+              onOpened={self.startTimer}
               centered={true}
             >
               <div className="request-modal">
@@ -241,8 +309,8 @@ class Driver extends Component {
                   </div>
                 </div>
                 <div>
-                  <Button color="primary" onClick={this.handleModalVisible}>Accept {this.state.time.s}</Button>{' '}
-                  <Button color="secondary" onClick={this.handleModalVisible}>Cancel</Button>
+                  <Button color="primary" onClick={self.handleModalVisible}>Accept {self.state.time.s}</Button>{' '}
+                  <Button color="secondary" onClick={self.handleModalVisible}>Cancel</Button>
                 </div>
               </div>
             </Modal>
@@ -259,13 +327,13 @@ class Driver extends Component {
                   <Row className="align-items-center no-gutters">
                     <Col>
                       <label className="switch">
-                        <input type="checkbox" checked={this.state.status} onChange={() => this.handleStatusChange()} />
+                        <input type="checkbox" checked={self.state.status} onChange={() => self.handleStatusChange()} />
                         <span className="slider round"></span>
                       </label>
                     </Col>
                     <Col>
-                      <Badge color={this.state.status == true ? "primary" : "danger"} className="info-badge">
-                        {this.state.statusText}
+                      <Badge color={self.state.status == true ? "primary" : "danger"} className="info-badge">
+                        {self.state.statusText}
                       </Badge>
                     </Col>
                   </Row>
