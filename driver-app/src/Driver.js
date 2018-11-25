@@ -28,6 +28,8 @@ class Driver extends Component {
       statusText: "STANDBY",
       modalVisible: false,
       // openModal: false,
+      socketListener: true,
+      // socketListener: "driver" + localStorage.getItem("idDriver"),
       time: {},
       seconds: 10,
       res: false,
@@ -41,6 +43,7 @@ class Driver extends Component {
     self.handleModalVisible = self.handleModalVisible.bind(self);
     // self.notice = self.notice.bind(self);
     self.send = self.send.bind(self);
+    self.accept = self.accept.bind(self);
   }
 
   secondsToTime(secs) {
@@ -64,44 +67,51 @@ class Driver extends Component {
     // let timeLeftVar = self.secondsToTime(self.state.seconds);
     // self.setState({ time: timeLeftVar });
     const self = this;
-    var auth =localStorage.getItem('auth');
-    if(auth ==="false" || auth === null){
+    // self.setState({
+    //   socketListener: true
+    // });
+    var auth = localStorage.getItem('auth');
+    if (auth === "false" || auth === null) {
       self.props.history.push('/login');
     }
 
+    // console.log(self.state.socketListener);
     self.authRfToken();
-    self.send();
+    if (self.state.socketListener === true)
+      self.send();
   }
-  
+
   send = () => {
     var self = this;
 
 
     const id = localStorage.getItem('idDriver');
     const { endpoint } = self.state;
-    const socket = socketIoClient(endpoint,{
+    const socket = socketIoClient(endpoint, {
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 2000,
       reconnectionAttempts: 5
     });
-    socket.on('driver'+id, (data)=>{
-      self.setState({res: JSON.stringify(data)});
-      // console.log(data);
-      if(!self.isEmpty(data))
-      console.log(data);
+    const socketListener = 'driver' + id;
+    socket.on(socketListener, (data) => {
+      self.setState({ res: JSON.stringify(data) });
+      if (!self.isEmpty(data))
+        console.log(data);
+      localStorage.setItem("idRequest", data.id);
       self.setState({
         modalVisible: true,
-        // openModal: true
-      })
-      // return data;
+        socketListener: false,
+      });
+      // console.log(self.state.socketListener);
     })
+
   }
 
-  authRfToken = () =>{
-    const self =this;
-    var auth =localStorage.getItem('auth');
-    if(auth ==="false" || auth === null){
+  authRfToken = () => {
+    const self = this;
+    var auth = localStorage.getItem('auth');
+    if (auth === "false" || auth === null) {
       self.props.history.push('/login');
     }
   }
@@ -140,14 +150,14 @@ class Driver extends Component {
 
   isEmpty = (obj) => {
     for (var key in obj) {
-        if (obj.hasOwnProperty(key))
-            return false;
+      if (obj.hasOwnProperty(key))
+        return false;
     }
     return true;
-}
+  }
 
 
-// notice whrn new request come
+  // notice whrn new request come
 
 
   handleModalVisible = () => {
@@ -183,7 +193,7 @@ class Driver extends Component {
 
     }
   }
-// Change status of driver
+  // Change status of driver
   changeState = () => {
     const self = this;
     const id = localStorage.getItem("idDriver");
@@ -272,11 +282,108 @@ class Driver extends Component {
       })
   }
 
+  accept = () => {
+    // e.preventDefault();
+    var self = this;
+    var data = {
+      "idDriver": localStorage.getItem("idDriver"),
+      "idRequest": localStorage.getItem("idRequest")
+    };
+    console.log(data.idDriver);
+    const session = {
+      token: localStorage.getItem('x-access-token'),
+      email: localStorage.getItem('email')
+    };
+    const h = new Headers();
+    h.append('Content-Type', 'application/json');
+
+    if (session.email && session.token) {
+      h.append('x-access-token', session.token);
+      // h.append('email', session.email);
+    };
+    fetch('http://localhost:3000/driver/accept', {
+      method: 'POST',
+      // mode: 'noCORS',
+      body: JSON.stringify(data),
+      headers: h
+    }).then(function (res) {
+      return res.json();
+
+    }).then((res) => {
+      console.log(res.msg);
+
+      //
+
+      if (res.msg === "INVALID TOKEN") {
+
+        const rfToken = localStorage.getItem('refresh_token');
+        const id = localStorage.getItem('id');
+        const dataRfToken = {
+          id: id,
+          rfToken: rfToken
+        }
+        fetch('http://localhost:3000/users/updateToken', {
+          method: 'POST',
+          body: JSON.stringify(dataRfToken),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }).then(function (res) {
+          return res.json();
+        }).then((res) => {
+          if (res.auth === true) {
+
+            localStorage.setItem('x-access-token', res.access_token);
+            // self.updateToken()
+            const sessionT = {
+              email: localStorage.getItem('email'),
+              token: localStorage.getItem('x-access-token')
+            }
+
+            const hT = new Headers();
+            hT.append('Content-Type', 'application/json');
+
+            if (sessionT.email && sessionT.token) {
+              hT.append('x-access-token', sessionT.token);
+              // hT.append('email', sessionT.email);
+            };
+
+            fetch('http://localhost:3000/driver/accept', {
+              method: 'POST',
+              // mode: 'noCORS',
+              body: JSON.stringify(data),
+              headers: hT
+            }).then(function (res) {
+              return res.json();
+            })
+              .then((res) => {
+                console.log(res);
+              })
+          } else {
+            localStorage.setItem('auth', false);
+
+          }
+        })
+      };
+      if (res.statusCode === 403) {
+        localStorage.setItem("auth", false);
+      }
+      //
+    })
+
+
+  }
 
 
   render() {
     const self = this;
     // self.notice();
+    // var req = self.state.res;
+    // console.log("test " + req);
+    const data = JSON.parse(self.state.res);
+    // console.log(data);
+
+    // console.log(data);
     return (
       <div className="App">
         <div className="app-container">
@@ -298,18 +405,24 @@ class Driver extends Component {
               centered={true}
             >
               <div className="request-modal">
-                <div className="request-modal-content">
-                  <h4>Khách hàng</h4>
-                  <h3>Trần Thị B</h3>
-                  <div>
-                    Sđt: 124124124
+                {/* {Object.values(data).map(x => */}
+                {
+                  <div className="request-modal-content">
+
+                    <h4>Khách hàng</h4>
+
+                    <h3>{data.name}</h3>
+                    <div>
+                      Sđt: {data.telephone}
+                    </div>
+                    <div>
+                      Địa chỉ: {data.address}
+                    </div>
                   </div>
-                  <div>
-                    Địa chỉ: 391 Lũy Bán Bích
-                  </div>
-                </div>
+                }
+
                 <div>
-                  <Button color="primary" onClick={self.handleModalVisible}>Accept {self.state.time.s}</Button>{' '}
+                  <Button color="primary" onClick={() => self.accept()}>Accept {self.state.time.s}</Button>{' '}
                   <Button color="secondary" onClick={self.handleModalVisible}>Cancel</Button>
                 </div>
               </div>

@@ -23,7 +23,7 @@ exports.loadRequestNew = () => {
 }
 
 exports.accept = (idRequest, idDriver) => {
-	var sql = 'update request set state = 1, idDriver = '+ idDriver +' where id = '+ idRequest +' and state = 1';
+	var sql = 'update request set state = 1, idDriver = '+ idDriver +' where id = '+ idRequest +' and state = 0';
 	return db.load(sql);
 }
 

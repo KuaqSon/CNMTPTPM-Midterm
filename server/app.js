@@ -191,20 +191,22 @@ io.on('connect', socket => {
     setInterval(
         () => {
             getApiAndEmitForReceiver(socket);
-
-        }
-        , 5000
-    );
-    setInterval(
-        () => {
             getApiAndEmitForManager(socket);
-        }, 5000
-    );
-    setInterval(
-        () => {
             getApiAndEmitForDriver(socket);
-        }, 10000
+        }
+        , 14000
     );
+
+    // setInterval(
+    //     () => {
+    //         getApiAndEmitForManager(socket);
+    //     }, 5000
+    // );
+    // setInterval(
+    //     () => {
+    //         getApiAndEmitForDriver(socket);
+    //     }, 14000
+    // );
 
     socket.on("disconnected", () => console.log("client disconnected"));
 
@@ -229,10 +231,12 @@ const getApiAndEmitForDriver = async socket => {
     Requestdb.loadRequestNew()
         .then(rows => {
             if (!isEmpty(rows)) {
-                rows.forEach(row => {
+                // rows.forEach(row => {
+                    rowReq = rows[0];
+
                     const coorLocation = {
-                        lat: row.lat,
-                        log: row.log
+                        lat: rowReq.lat,
+                        log: rowReq.log
                     }
                     dbUser.findDriver()
                         .then(rows => {
@@ -257,14 +261,12 @@ const getApiAndEmitForDriver = async socket => {
                                         minDistance = distance;
                                     }
                                 });
+
+
                                 if (idDriver != 0 && idDriver != 1 && status === 1) {
-                                    res = row;
+                                    res = rowReq;
                                     try {
                                         socket.emit("driver" + idDriver, res);
-                                        setTimeout(() => {
-                                            if (row.state === 1)
-                                                return;
-                                        }, 10000)
                                     } catch (error) {
                                         console.error(`Error: ${error.code}`);
                                     }
@@ -275,9 +277,6 @@ const getApiAndEmitForDriver = async socket => {
                     // console.log("test2 "+idDriver);
 
                     // -------------------
-
-
-                });
 
             }
         })

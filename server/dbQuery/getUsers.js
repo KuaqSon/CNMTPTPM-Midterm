@@ -51,3 +51,4 @@ exports.loadUser = () => {
 	var sql = 'select * from user where isDelete = 0';
 	return db.load(sql);
 }
+
