@@ -17,10 +17,12 @@ router.post('/caculator', function (req, res) {
 router.post('/accept', function (req, res) {
     var idRequest = req.body.idRequest;
     var idDriver = req.body.idDriver;
+    var latDriver = req.body.latDriver;
+    var lngDriver = req.body.lngDriver;
     Request.accept(idRequest, idDriver)
         .then(load1 => {
 console.log(load1);
-            User.changeStateDriver(idDriver, 2)
+            User.changeStateDriver(idDriver, 2, latDriver, lngDriver)
                 .then(load => {
                     res.json({
                         msg: load,
@@ -47,7 +49,10 @@ console.log(load1);
 router.post('/state', function (req, res) {
     var id = req.body.id;
     var state = req.body.state;
-    User.changeStateDriver(id, state)
+    var latDriver = req.body.latDriver;
+    var lngDriver = req.body.lngDriver;
+
+    User.changeStateDriver(id, state, latDriver, lngDriver)
         .then(load => {
             // console.log(state);
             res.json({

@@ -35,6 +35,11 @@ export class MapContainer extends Component {
     };
   }
 
+  saveLocation = (lat, lng) => {
+    localStorage.setItem('latDriver', lat);
+    localStorage.setItem('lngDriver', lng);
+  }
+
   geocodeAddress = (address) => {
     this.geocoder.geocode({ 'address': address }, (results, status) => {
 
@@ -121,6 +126,7 @@ export class MapContainer extends Component {
               isGeocodingError: false,
               currentLocation: results[0].geometry.location,
             });
+            this.saveLocation(results[0].geometry.location.lat(), results[0].geometry.location.lng());
             this.renderDirection(results[0].geometry.location);
           }
 
@@ -164,6 +170,7 @@ export class MapContainer extends Component {
   }
 
   detectCurrentLocation = () => {
+    var self = this;
     if (navigator && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(pos => {
         const coords = pos.coords;
@@ -180,6 +187,7 @@ export class MapContainer extends Component {
               isGeocodingError: false,
               currentLocation: latLng, 
             });
+            self.saveLocation(results[0].geometry.location.lat(), results[0].geometry.location.lng());
           }
           this.renderDirection(results[0].geometry.location);
         });

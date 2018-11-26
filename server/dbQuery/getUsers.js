@@ -15,35 +15,35 @@ exports.findDriver = () => {
 	return db.load(sql);
 }
 
-exports.changeStateDriver = (id, state) => {
-	var sql = 'update user set state = ' + state + ' where id = ' + id;
+exports.changeStateDriver = (id, state, latDriver, lngDriver) => {
+	var sql = 'update user set state = ' + state + ', lat = ' + latDriver + ', log = ' + lngDriver + ' where id = ' + id;
 	return db.load(sql);
 }
 
 exports.findUser = (username) => {
-	var sql = 'select * from user where username = "'+ username +'"';
+	var sql = 'select * from user where username = "' + username + '"';
 	return db.load(sql);
 };
 
 exports.findUserByID = (id) => {
-	var sql = 'select * from user where id = "'+ id +'"';
+	var sql = 'select * from user where id = "' + id + '"';
 	return db.load(sql);
 };
 
 
 
 exports.addUser = (name, email, auth, username, password, lat, log) => {
-	var sql = 'insert into user value (default,"'+ name +'","'+ email +'","' + auth +'","'+ username +'","'+ password +'",default,"",'+ lat + ','+ log +', default, default)';
+	var sql = 'insert into user value (default,"' + name + '","' + email + '","' + auth + '","' + username + '","' + password + '",default,"",' + lat + ',' + log + ', default, default)';
 	return db.load(sql);
 };
 
 exports.Update = (id, name, email, auth, username, password) => {
-	var sql = 'update user set name =  "'+ name + '", email =  "'+ email + '", auth = '+ auth +', username = "' + username + '" where id = '+ id;
+	var sql = 'update user set name =  "' + name + '", email =  "' + email + '", auth = ' + auth + ', username = "' + username + '" where id = ' + id;
 	return db.load(sql);
 };
 
-exports.deleteUser = (id)=>{
-	var sql = 'update user set isDelete = 1 where id = '+ id;
+exports.deleteUser = (id) => {
+	var sql = 'update user set isDelete = 1 where id = ' + id;
 	return db.load(sql);
 }
 

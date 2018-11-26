@@ -244,7 +244,9 @@ class Driver extends Component {
     const state = localStorage.getItem("state");
     const data = {
       id: id,
-      state: state
+      state: state,
+      "latDriver": localStorage.getItem("latDriver"),
+      "lngDriver": localStorage.getItem("lngDriver")
     }
     const session = {
       // email: localStorage.getItem('email'),
@@ -331,7 +333,10 @@ class Driver extends Component {
     var self = this;
     var data = {
       "idDriver": localStorage.getItem("idDriver"),
-      "idRequest": localStorage.getItem("idRequest")
+      "idRequest": localStorage.getItem("idRequest"),
+      "latDriver": localStorage.getItem("latDriver"),
+      "lngDriver": localStorage.getItem("lngDriver")
+      
     };
     console.log(data.idDriver);
     const session = {
@@ -454,7 +459,7 @@ class Driver extends Component {
     // const data = JSON.parse(self.state.res);
     const data = self.state.res;
     // console.log(data);
-
+    var driverId = localStorage.getItem('id');
     // console.log(data);
     return (
       <div className="App">
@@ -568,6 +573,7 @@ class Driver extends Component {
         </div>
         <div className="maps-container">
           <MapContainer
+            driverId={driverId}
             requestLocation={this.state.requestLocation}
           ></MapContainer>
         </div>
