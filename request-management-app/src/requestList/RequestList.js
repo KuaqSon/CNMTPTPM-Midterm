@@ -22,8 +22,15 @@ class RequestForm extends Component {
         const self = this;
         const { endpoint } = self.state;
         const socket = socketIoClient(endpoint);
-        socket.on("get data", data => self.setState({ res: JSON.stringify(data) }));
-        console.log(self.state.res);
+        socket.on("manager", data => self.setState({ res: JSON.stringify(data) }));
+        // console.log(self.state.res);
+
+        // authRfToken();
+        var auth = localStorage.getItem("auth");
+        if (auth === "false" || auth === null) {
+            this.props.history.push('/login');
+        }
+
     }
 
     send = () => {
@@ -74,14 +81,14 @@ class RequestForm extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                            {Object.values(data).map(x => 
-                                <tr key={x.id} onClick={() => this.GetRequestDetails(x)}>
-                                    <td>{x.name}</td>
-                                    <td>{x.telephone}</td>
-                                    <td>{x.address.length >= 70 ? x.address.substring(0, 70)+ "..." : x.address}</td>
-                                    <td>{x.infor}</td>
-                                </tr>
-                            )}
+                                {Object.values(data).map(x =>
+                                    <tr key={x.id} onClick={() => this.GetRequestDetails(x)}>
+                                        <td>{x.name}</td>
+                                        <td>{x.telephone}</td>
+                                        <td>{x.address.length >= 70 ? x.address.substring(0, 70) + "..." : x.address}</td>
+                                        <td>{x.infor}</td>
+                                    </tr>
+                                )}
                             </tbody>
                         </Table>
                     </div>

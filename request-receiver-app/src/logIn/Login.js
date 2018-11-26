@@ -58,6 +58,8 @@ class LoginForm extends Component {
         }
         else {
           console.log("DKM éo có tài khoảng cũng đòi login!");
+          localStorage.setItem('auth', false);
+
         }
 
       })

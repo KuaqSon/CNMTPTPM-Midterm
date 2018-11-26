@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import './RequestForm.css';
 import { Col, Row, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
-import axios from 'axios';
-import authRfToken from '../config/auth';
+// import axios from 'axios';
+// import authRfToken from '../config/auth';
+import { Redirect } from "react-router-dom";
 
 class RequestForm extends Component {
 
@@ -10,13 +11,10 @@ class RequestForm extends Component {
     constructor() {
         super();
         var self = this;
+        this.state = {
+            auth : Boolean
+        }
         self.handleSubmit = self.handleSubmit.bind(self);
-        // self.upDateToken = self.upDateToken.bind(self);
-        // self.state = {
-        //     headers:'',
-        //     refresh_token:'',
-        //     access_token:''
-        // }
 
     }
 
@@ -25,12 +23,14 @@ class RequestForm extends Component {
     handleSubmit(e) {
         e.preventDefault();
         var self = this;
-        // const data = new FormData(e.target);
         var data = {
             "name": self.name.value,
             "telephone": self.telephone.value,
             "address": self.address.value,
-            "infor": self.infor.value
+            "infor": self.infor.value,
+            "lat": 0,
+            "log": 0,
+            "idUser": localStorage.getItem('id')
         }
         const session = {
             email: localStorage.getItem('email'),
@@ -75,7 +75,7 @@ class RequestForm extends Component {
                         if (res.auth === true) {
 
                             localStorage.setItem('x-access-token', res.access_token);
-                            
+                            // self.updateToken()
                             const sessionT = {
                                 email: localStorage.getItem('email'),
                                 token: localStorage.getItem('x-access-token')
@@ -99,8 +99,6 @@ class RequestForm extends Component {
                             })
                                 .then((res) => {
                                     console.log(res);
-                                    
-                                    // console.log(res.msg);
                                 })
                         } else {
                             localStorage.setItem('auth', false);
@@ -116,56 +114,49 @@ class RequestForm extends Component {
 
     componentDidMount() {
         // authRfToken();
-    }
-
-
-    updateToken(){
-        const rfToken = localStorage.getItem('refresh_token');
-        const id = localStorage.getItem('id');
-        const data = {
-            id: id,
-            rfToken: rfToken
+        var auth = localStorage.getItem("auth");
+        if (auth === "false" || auth === null) {
+            this.props.history.push('/login');
         }
-        fetch('http://localhost:3000/user/updateToken', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(function (res) {
-            return res;
-        }).then((res) => {
-            if (res.auth === true) {
-                localStorage.setItem('x-access-token', res.access_token);
-            } else {
-                localStorage.setItem('auth', false);
-            }
-        })
     }
+
+
+    // updateToken(){
+    //     const rfToken = localStorage.getItem('refresh_token');
+    //     const id = localStorage.getItem('id');
+    //     const data = {
+    //         id: id,
+    //         rfToken: rfToken
+    //     }
+    //     fetch('http://localhost:3000/user/updateToken', {
+    //         method: 'POST',
+    //         body: JSON.stringify(data),
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         }
+    //     }).then(function (res) {
+    //         return res;
+    //     }).then((res) => {
+    //         if (res.auth === true) {
+    //             localStorage.setItem('x-access-token', res.access_token);
+    //         } else {
+    //             localStorage.setItem('auth', false);
+    //         }
+    //     })
+    // }
     
 
 
     render() {
         const self = this;
+        
         return (
-
             <div className="request-form">
                 <div className="header-request">
                     Doubble Son
                     <br></br>
                     Take car
             </div>
-
-                {/* {items.map(item => (
-                    <li key={item.id}>
-                        => Name: {item.name}
-                        Telephone: {item.telephone}
-                        Address: {item.address}
-                        Infor: {item.infor}
-
-                    </li>
-
-                ))} */}
                 <Form className="form-container" onSubmit={self.handleSubmit}>
 
                     <Row form>
@@ -173,7 +164,7 @@ class RequestForm extends Component {
                             <FormGroup >
                                 <Label for="name">Name</Label>
                                 {/* <Input  type="text" name="name" id="name" placeholder="with a placeholder" floatingLabelText="name"/> */}
-                                <Input innerRef={(name) => this.name = name} type="text" name="name" id="name" placeholder="with a placeholder" floatingLabelText="name" />
+                                <Input innerRef={(name) => this.name = name} type="text" name="name" id="name" placeholder="with a placeholder"/>
                             </FormGroup>
                         </Col>
                         <Col md={6}>

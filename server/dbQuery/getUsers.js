@@ -1,9 +1,24 @@
 var db = require('../config/db');
+// auth = 0 => user normal
+// auth = 1 => dirver
 
+// state:
+// user: 0 nothing - 1: waiting driver - 2: driver catched
+// driver: 0 non_active - 1: is activer - 2: catch somebody
 exports.loadAll = () => {
 	var sql = 'select * from user';
 	return db.load(sql);
 };
+
+exports.findDriver = () => {
+	var sql = 'select * from user where auth = 1 and state = 1';
+	return db.load(sql);
+}
+
+exports.changeStateDriver = (id, state) => {
+	var sql = 'update user set state = ' + state + ' where id = ' + id;
+	return db.load(sql);
+}
 
 exports.findUser = (username) => {
 	var sql = 'select * from user where username = "'+ username +'"';
@@ -18,7 +33,7 @@ exports.findUserByID = (id) => {
 
 
 exports.addUser = (name, email, auth, username, password, lat, log) => {
-	var sql = 'insert into user value (default,"'+ name +'","'+ email +'","' + auth +'","'+ username +'","'+ password +'",default,'+ lat + ','+ log +', default, default)';
+	var sql = 'insert into user value (default,"'+ name +'","'+ email +'","' + auth +'","'+ username +'","'+ password +'",default,"",'+ lat + ','+ log +', default, default)';
 	return db.load(sql);
 };
 
@@ -36,3 +51,4 @@ exports.loadUser = () => {
 	var sql = 'select * from user where isDelete = 0';
 	return db.load(sql);
 }
+

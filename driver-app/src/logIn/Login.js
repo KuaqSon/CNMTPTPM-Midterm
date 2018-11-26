@@ -52,7 +52,7 @@ class LoginForm extends Component {
           localStorage.setItem('refresh_token', res.refresh_token);
           localStorage.setItem('x-access-token', res.access_token);
           localStorage.setItem('email', JSON.stringify(res.user.email));
-          localStorage.setItem('id', JSON.stringify(res.user.id));
+          localStorage.setItem('idDriver', JSON.stringify(res.user.id));
           // if(res.auth === true)
           localStorage.setItem('auth', res.auth);
         }

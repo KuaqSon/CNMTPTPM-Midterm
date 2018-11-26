@@ -113,7 +113,8 @@ router.post('/updateToken', function (req, res) {
         .then(row => {
             if (isEmpty(row)) {
                 res.json({
-                    msg: error
+                    msg: error,
+                    auth: false
                 });
                 res.statusCode = 401;
             } else {
@@ -178,12 +179,19 @@ router.post('/edit-user/:id', function (req, res) {
             res.statusCode = 500;
             res.end('dkm');
         })
-
-
-
 });
 
-
+router.get('/logout:id',function(req, res){
+    try{
+    userRefreshTokenExt.deleteUserLogin(req.params.id);
+    } catch(err) {
+        res.statusCode = 403;
+        res.json({
+            auth: false
+        })
+        console.log(err);
+    }
+})
 // router.get('/login', function (req, res) {
 
 //     if (res.locals.user) res.redirect('/');

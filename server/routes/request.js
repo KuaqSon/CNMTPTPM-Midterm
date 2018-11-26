@@ -4,7 +4,7 @@ var auth = require('../config/token').verifyAccessToken;
 var router = express.Router();
 
 
-router.get('/',auth, function (req, res) {
+router.get('/', function (req, res) {
     // console.log(req.params.name);
     console.log('asdas');
     Request.loadAll()
@@ -25,6 +25,9 @@ router.post('/add',auth , function (req, res) {
     var telephone = req.body.telephone;
     var address = req.body.address;
     var infor = req.body.infor;
+    var lat = req.body.lat;
+    var log = req.body.log;
+    var idUser = req.body.idUser;
 
     Request.findByName(name)
         .then(rows => {
@@ -33,7 +36,7 @@ router.post('/add',auth , function (req, res) {
                     msg: 'You have already booked!'
                 });
             else {
-                Request.addRequest(name, telephone, address, infor)
+                Request.addRequest(name, telephone, address, infor, lat, log, idUser)
                     .then(row => {
                         res.json({
                             msg: 'Add successful!'
@@ -65,6 +68,36 @@ router.post('/edit', function (req, res) {
         });
 
 });
+
+router.post('/setpoint', function(req, res){
+    var id = req.body.id;
+    var lat = req.body.lat;
+    var log = req.body.log;
+    Request.setPoint(id, lat, log)
+    .then(res.json({
+        msg: 'set point successful!'
+    }))
+    .catch(err => {
+        console.log(err);
+        res.statusCode = 500;
+    })
+
+})
+
+
+router.post('/accept', function(req, res){
+    var idRequest = req.body.idRequest;
+    var idDriver = req.body.idDriver;
+    Request.accept(idRequest, idDriver)
+    .then(res.json({
+        msg: 'accepted'
+    }))
+    .catch(err => {
+        console.log(err);
+        res.statusCode = 500;
+    })
+
+})
 
 router.post('/test', (req, res) => {
     const {name, phone} = req.body;

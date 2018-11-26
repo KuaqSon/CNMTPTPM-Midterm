@@ -14,3 +14,8 @@ exports.findExUserByID = (id) => {
 	var sql = 'select * from userRefreshTokenExt where userId = "'+ id +'"';
 	return db.load(sql);
 };
+
+exports.deleteUserLogin = (id) =>{
+	var sql = 'delete from userRefreshTokenExt where id = ' + id;
+	return db.load(sql);
+}
