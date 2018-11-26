@@ -14,7 +14,7 @@ class RequestForm extends Component {
         super();
         this.state = {
             res: false,
-            driverName: '',
+            detail: false,
             requestLocation: {
                 lat: '',
                 lng: ''
@@ -61,10 +61,10 @@ class RequestForm extends Component {
 
     SetRequestDetail = (record) => {
         this.setState({
-            driverName: record.driverName,
+            detail: record,
             requestLocation: {
-                lat: record.latRequest + '',
-                lng: record.lngRequest + ''
+                lat: record.lat + '',
+                lng: record.log + ''
             },
             driverLocation: {
                 lat: record.latDriver + '',
@@ -111,7 +111,7 @@ class RequestForm extends Component {
                                         <td>{x.name}</td>
                                         <td>{x.telephone}</td>
                                         <td>{x.address.length >= 70 ? x.address.substring(0, 70) + "..." : x.address}</td>
-                                        <td>{x.infor}</td>
+                                        <td>{x.state === 0 ? "CHƯA NHẬN XE" : (x.state === 1 ? "ĐANG ĐI" : "HOÀN THÀNH" ) }</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -123,11 +123,15 @@ class RequestForm extends Component {
                     <Col md={6}>
                         <div className="list-container">
                             <CardBody>
-                                <CardTitle><Badge className="driver-name" color="info">Driver {this.state.driverName ? this.state.driverName : ''}</Badge></CardTitle>
-                                <CardText>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</CardText>
-                                <CardText>
-                                    <small className="text-muted">Last updated 3 mins ago</small>
-                                </CardText>
+                                <CardTitle><Badge className="driver-name" color="info">Tài xế: {(this.state.detail.idDriver !== 0 && this.state.detail.idDriver !== 1  && this.state.detail.driverName) ? this.state.detail.driverName : ''}</Badge></CardTitle>
+                                <CardText>Điện thoại: {(this.state.detail.idDriver !== 0 && this.state.detail.idDriver !== 1  && this.state.detail.phoneDriver) ? this.state.detail.phoneDriver : ''}</CardText>
+                            </CardBody>
+
+                            <CardBody className="mt-3">
+                                <CardTitle><Badge className="driver-name" color="info">Khách {this.state.detail.name ? this.state.detail.name : ''}</Badge></CardTitle>
+                                <CardText>Điện thoại: {this.state.detail.telephone ? this.state.detail.telephone : ''}</CardText>
+                                <CardText>Địa chỉ: {this.state.detail.address ? this.state.detail.address : ''}</CardText>
+                                <CardText>Thông tin: {this.state.detail.infor ? this.state.detail.infor : ''}</CardText>
                             </CardBody>
                         </div>
                     </Col>

@@ -155,7 +155,6 @@ export class MapContainer extends Component {
         && !this.props.driverLocation.lat && !this.props.driverLocation.lng && !this.props.driverLocation ){
       return;
     }
-
     
     const origin = new this.props.google.maps.LatLng(Number(this.props.driverLocation.lat), Number(this.props.driverLocation.lng));
     const des = new this.props.google.maps.LatLng(Number(this.props.requestLocation.lat), Number(this.props.requestLocation.lng));
@@ -181,7 +180,7 @@ export class MapContainer extends Component {
         <div className="row mt-2">
           <div className="col-sm-12">
 
-            {this.state.isGeocodingError ? <Alert color="danger">Address not found.</Alert> : <Alert color="info">Vị trí hiện tại: {this.state.foundAddress}</Alert>}
+            {/* {this.state.isGeocodingError ? <Alert color="danger">Address not found.</Alert> : <Alert color="info">Vị trí hiện tại: {this.state.foundAddress}</Alert>} */}
 
             <div className="map" ref={this.setMapElementReference}></div>
             
