@@ -105,7 +105,7 @@ class Driver extends Component {
     });
     const socketListener = 'driver' + id;
     socket.on(socketListener, (data) => {
-      self.setState({ res: JSON.stringify(data) });
+      self.setState({ res: data });
       if (!self.isEmpty(data))
         console.log(data);
       localStorage.setItem("idRequest", data.id);
@@ -372,7 +372,6 @@ class Driver extends Component {
               })
           } else {
             localStorage.setItem('auth', false);
-
           }
         })
       };
@@ -381,8 +380,15 @@ class Driver extends Component {
       }
       //
     })
+
+    const requestLat = this.state.res.latRequest;
+    const requestLng = this.state.res.lngRequest;
     self.setState({
-      modalVisible: false
+      modalVisible: false,
+      requestLocation: {
+        lat: requestLat + '',
+        lng: requestLng + ''
+      }
     });
   }
 
@@ -443,12 +449,12 @@ class Driver extends Component {
 
                     <h4>Khách hàng</h4>
 
-                    <h3>{data.name}</h3>
+                    <h3>{(data && data.name) ? data.name : ''}</h3>
                     <div>
-                      Sđt: {data.telephone}
+                      Sđt: {(data && data.telephone) ? data.telephone : ''}
                     </div>
                     <div>
-                      Địa chỉ: {data.address}
+                      Địa chỉ: {(data && data.address) ? data.address : ''}
                     </div>
                   </div>
                 }
