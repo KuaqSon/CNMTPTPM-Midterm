@@ -314,14 +314,33 @@ function findingDriver(coorLocation, idIgnor) {
     // return idDriver;
 }
 
-function caculatorDistance(coor1, coor2) {
-    var lat1 = coor1.lat;
-    var log1 = coor1.log;
-    var lat2 = coor2.lat;
-    var log2 = coor2.log;
+function caculatorDistance(coor1, coor2) { 
     // console.log(lat1);
     // console.log(lat2);
-    const distance = Math.sqrt((lat1 - lat2) * (lat1 - lat2) + (log1 - log2) * (log1 - log2));
+    // const distance = Math.sqrt((lat1 - lat2) * (lat1 - lat2) + (log1 - log2) * (log1 - log2));
     // console.log(distance);
-    return distance;
+
+    function toRad(x) {
+        return x * Math.PI / 180;
+    }
+
+    var lon1 = coor1.log;
+    var lat1 = coor1.lat;
+
+    var lon2 = coor2.log;
+    var lat2 = coor2.lat;
+
+    var R = 6378137; // m
+
+    var x1 = lat2 - lat1;
+    var dLat = toRad(x1);
+    var x2 = lon2 - lon1;
+    var dLon = toRad(x2)
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+
+    return d;
 }
