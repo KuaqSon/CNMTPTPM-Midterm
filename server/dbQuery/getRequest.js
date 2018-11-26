@@ -18,7 +18,15 @@ exports.loadRequest = () => {
 };
 
 exports.loadRequestNew = () => {
-	var sql = 'select * from request where isDelete = 0 and state = 0';
+	var sql = 'select * from request where isDelete = 0 and state = 0 and lat != 0 and log != 0';
+	return db.load(sql);
+}
+
+exports.identifier = (id, lat, log) => {
+	
+	var sql = ' update request set lat = '+ lat + ', log = '+ log + ' where id = ' + id;
+	// var sql = 'update request set state = 1, idDriver = '+ idDriver +' where id = '+ idRequest +' and state = 0';
+	
 	return db.load(sql);
 }
 

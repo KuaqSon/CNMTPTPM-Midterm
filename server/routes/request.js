@@ -19,6 +19,20 @@ router.get('/', function (req, res) {
 
 });
 
+router.post('/identifier', function(req, res){
+    var id = req.body.id;
+    var lat = req.body.lat;
+    var log = req.body.log;
+
+    Request.identifier(id, lat, log)
+    .then(row => {
+        res.json({
+            res: row
+        });
+    }).catch(err => {console.log(err);
+        res.statusCode = 500;
+    })
+});
 
 router.post('/add',auth , function (req, res) {
     var name = req.body.name;

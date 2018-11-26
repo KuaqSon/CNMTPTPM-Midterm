@@ -18,40 +18,38 @@ var ATLANTIC_OCEAN = {
   longitude: -55.491477
 };
 
-export class MapContainer extends Component {  
+export class MapContainer extends Component {
   constructor(props) {
     super(props);
 
     // const { lat, lng } = this.props.initialCenter;
     this.state = {
-      // currentLocation: {
-      //   lat: lat,
-      //   lng: lng
-      // },
+      identifyLocation: {
+        lat: '',
+        lng: ''
+      },
       foundAddress: INITIAL_LOCATION.address,
-      isGeocodingError : false,
+      isGeocodingError: false,
     };
   }
 
   geocodeAddress = (address) => {
+    // var identify = {lat:'', lng: ''};
     this.geocoder.geocode({ 'address': address }, (results, status) => {
 
       if (status === this.props.google.maps.GeocoderStatus.OK) {
 
         this.setState({
           foundAddress: results[0].formatted_address,
+          identifyLocation: {
+            lat: results[0].geometry.location.lat(),
+            lng: results[0].geometry.location.lng()
+          },
           isGeocodingError: false
         });
-
         this.map.setCenter(results[0].geometry.location);
         this.marker.setPosition(results[0].geometry.location);
-        
-        // const lat= results[0].geometry.location.lat();
-        // const lng= results[0].geometry.location.lng();
-
-        // console.log("lat: " + lat);
-        // console.log("lng: " + lng);
-
+        this.submitIdentifier();
         return;
       }
 
@@ -71,19 +69,88 @@ export class MapContainer extends Component {
       });
 
     });
+
+    return;
   }
 
   handleFormSubmit = (submitEvent) => {
     submitEvent.preventDefault();
 
     var address = this.searchInputElement.value;
-
     this.geocodeAddress(address);
+
+  }
+
+  submitIdentifier = () => {
+    const lat = this.state.identifyLocation.lat;
+    const lng = this.state.identifyLocation.lng;
+    const id = this.props.requestId;
+    var data = {
+      id: id,
+      lat: lat,
+      log: lng
+    };
+    console.log(data);
+    const session = {
+      token: localStorage.getItem('x-access-token')
+    }
+    const h = new Headers();
+    h.append('Content-Type', 'application/json');
+
+    if (session.email && session.token) {
+      h.append('x-access-token', session.token);
+    };
+    fetch('http://localhost:3000/request/identifier', {
+      method: 'POST',
+      // mode: 'noCORS',
+      body: JSON.stringify(data),
+      headers: h
+    }).then(function (res) {
+      return res.json();
+    }).then((res) => {
+      if (res.auth === true) {
+
+          localStorage.setItem('x-access-token', res.access_token);
+          // self.updateToken()
+          const sessionT = {
+              email: localStorage.getItem('email'),
+              token: localStorage.getItem('x-access-token')
+          }
+
+          const hT = new Headers();
+          hT.append('Content-Type', 'application/json');
+  
+          if (sessionT.email && sessionT.token) {
+              hT.append('x-access-token', sessionT.token);
+              // hT.append('email', sessionT.email);
+          };
+
+          fetch('http://localhost:3000/request/identifier', {
+              method: 'POST',
+              // mode: 'noCORS',
+              body: JSON.stringify(data),
+              headers: hT
+          }).then(function (res) {
+              return res.json();
+          })
+              .then((res) => {
+                  console.log(res);
+              })
+      } else {
+          localStorage.setItem('auth', false);
+          
+      }
+  })
+
+
+
+
+
   }
 
   componentDidMount() {
     var mapElement = this.mapElement;
-    
+
     this.map = new this.props.google.maps.Map(mapElement, {
       zoom: INITIAL_MAP_ZOOM_LEVEL,
       center: {
@@ -99,7 +166,7 @@ export class MapContainer extends Component {
         lng: INITIAL_LOCATION.position.longitude
       }
     });
-    
+
     this.geocoder = new this.props.google.maps.Geocoder();
     this.props.google.maps.event.addListener(this.map, 'click', (event) => {
       this.geocoder.geocode({
@@ -158,7 +225,7 @@ export class MapContainer extends Component {
             {this.state.isGeocodingError ? <Alert color="danger">Address not found.</Alert> : <Alert color="info">{this.state.foundAddress}</Alert>}
 
             <div className="map" ref={this.setMapElementReference}></div>
-            
+
           </div>
         </div>
       </div>

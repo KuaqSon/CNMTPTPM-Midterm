@@ -381,8 +381,8 @@ class Driver extends Component {
       //
     })
 
-    const requestLat = this.state.res.latRequest;
-    const requestLng = this.state.res.lngRequest;
+    const requestLat = this.state.res.lat;
+    const requestLng = this.state.res.log;
     self.setState({
       modalVisible: false,
       requestLocation: {
@@ -418,7 +418,8 @@ class Driver extends Component {
     // self.notice();
     // var req = self.state.res;
     // console.log("test " + req);
-    const data = JSON.parse(self.state.res);
+    // const data = JSON.parse(self.state.res);
+    const data = self.state.res;
     // console.log(data);
 
     // console.log(data);
