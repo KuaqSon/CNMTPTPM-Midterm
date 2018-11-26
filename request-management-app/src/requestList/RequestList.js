@@ -102,7 +102,9 @@ class RequestForm extends Component {
                     <Col md={6}>
                         <div className="mt-3">
                             {/* <h1><Badge color="secondary">Maps will load here...</Badge></h1> */}
-                            <MapContainer />
+                            <MapContainer 
+                                // requestLocation={this.state.requestLocation}
+                            />
                         </div>
                     </Col>
                 </Row>
