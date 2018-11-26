@@ -27,7 +27,11 @@ class Driver extends Component {
       statusText: "STANDBY",
       modalVisible: false,
       time: {}, 
-      seconds: 10
+      seconds: 10,
+      requestLocation: {
+        lat: "",
+        lng: "",
+      }
     }; // pass data here 
 
     this.timer = 0;
@@ -35,6 +39,7 @@ class Driver extends Component {
     this.countDown = this.countDown.bind(this);
     this.handleStatusChange = this.handleStatusChange.bind(this);  
     this.handleModalVisible = this.handleModalVisible.bind(this);
+    this.hanldeAcceptRequest = this.hanldeAcceptRequest.bind(this);
 }
 
   secondsToTime(secs){
@@ -100,9 +105,22 @@ class Driver extends Component {
     }
   }
 
-  handleModalVisible = () => {
+  handleModalVisible = (isAccept) => {
     this.setState({
       modalVisible: !this.state.modalVisible,
+    });
+
+    // if (isAccept){
+    //   this.hanldeAcceptRequest();
+    // }
+  }
+
+  hanldeAcceptRequest = () => {
+    this.setState({
+      requestLocation: {
+        lat: "10.7614556",
+        lng: "106.6827258"
+      }
     });
   }
 
@@ -139,8 +157,8 @@ class Driver extends Component {
                   </div>
                 </div>
                 <div>
-                <Button color="primary" onClick={this.handleModalVisible}>Accept {this.state.time.s}</Button>{' '}
-                <Button color="secondary" onClick={this.handleModalVisible}>Cancel</Button>
+                <Button color="primary" onClick={() => this.handleModalVisible(true)}>Accept{this.state.time.s}</Button>{' '}
+                <Button color="secondary" onClick={() => this.handleModalVisible(false)}>Cancel</Button>
                 </div>
               </div>
             </Modal>
@@ -232,7 +250,9 @@ class Driver extends Component {
           </Row>
         </div>
         <div className="maps-container">
-          <MapContainer></MapContainer>
+          <MapContainer
+            requestLocation={this.state.requestLocation}
+          ></MapContainer>
         </div>
       </div>
     );

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
+import { GoogleApiWrapper, InfoWindow, Marker  } from 'google-maps-react';
 import './maps.css';
 import { Alert, Button } from 'reactstrap';
+import { Stats } from 'fs';
 
 var INITIAL_LOCATION = {
   address: 'London, United Kingdom',
@@ -30,6 +31,7 @@ export class MapContainer extends Component {
       // },
       foundAddress: INITIAL_LOCATION.address,
       isGeocodingError : false,
+      currentLocation: String,
     };
   }
 
@@ -73,6 +75,10 @@ export class MapContainer extends Component {
     });
   }
 
+  componentWillReceiveProps(props) {
+    this.renderDirection(this.state.currentLocation);
+  }
+
   componentDidMount() {
     var mapElement = this.mapElement;
     
@@ -92,32 +98,11 @@ export class MapContainer extends Component {
       }
     });
 
-    if (navigator && navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(pos => {
-        const coords = pos.coords;
-        const latLng = new this.props.google.maps.LatLng(coords.latitude, coords.longitude);
-        // this.map.setCenter(center);
-        // this.marker.setPosition(center);
-        // this.setState({
-        //   foundAddress: pos.formatted_address,
-        //   isGeocodingError: false
-        // });
-        this.geocoder.geocode({
-          'latLng': latLng
-        }, (results, status) => {
-          if (status == this.props.google.maps.GeocoderStatus.OK) {
-            console.log(results[0].formatted_address);
-            this.marker.setPosition(results[0].geometry.location);
-            this.map.setCenter(results[0].geometry.location);
-            this.setState({
-              foundAddress: results[0].formatted_address,
-              isGeocodingError: false
-            });
-          }
-        });
-      });
-    }
-    
+    this.directionsService = new this.props.google.maps.DirectionsService();
+    this.directionsDisplay = new this.props.google.maps.DirectionsRenderer(); 
+
+    this.detectCurrentLocation();
+
     this.geocoder = new this.props.google.maps.Geocoder();
     this.props.google.maps.event.addListener(this.map, 'click', (event) => {
       this.geocoder.geocode({
@@ -128,10 +113,57 @@ export class MapContainer extends Component {
           this.marker.setPosition(results[0].geometry.location);
           this.setState({
             foundAddress: results[0].formatted_address,
-            isGeocodingError: false
+            isGeocodingError: false,
+            currentLocation: results[0].geometry.location,
           });
         }
+        this.renderDirection(results[0].geometry.location);
       });
+    });
+
+    this.renderDirection(this.state.currentLocation);
+    console.log(this.props.requestLocation);
+  }
+
+  detectCurrentLocation = () => {
+    if (navigator && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        const coords = pos.coords;
+        const latLng = new this.props.google.maps.LatLng(coords.latitude, coords.longitude);
+        this.geocoder.geocode({
+          'latLng': latLng
+        }, (results, status) => {
+          if (status == this.props.google.maps.GeocoderStatus.OK) {
+            console.log(results[0].formatted_address);
+            this.marker.setPosition(results[0].geometry.location);
+            this.map.setCenter(results[0].geometry.location);
+            this.setState({
+              foundAddress: results[0].formatted_address,
+              isGeocodingError: false,
+              currentLocation: latLng, 
+            });
+          }
+          this.renderDirection(results[0].geometry.location);
+        });
+      });
+    }
+  }
+
+  renderDirection = (currentLocation) => {
+    console.log(this.props.requestLocation);
+    if (!this.props.requestLocation.lat && !this.props.requestLocation.lng){
+      return;
+    }
+    const des = new this.props.google.maps.LatLng(Number(this.props.requestLocation.lat), Number(this.props.requestLocation.lng));
+    this.directionsService.route({
+      origin: currentLocation,
+      destination: des,
+      travelMode: 'DRIVING'
+    }, (response, status) => {
+      if (status ===  'OK'){
+        this.directionsDisplay.setMap(this.map);
+        this.directionsDisplay.setDirections(response);
+      }
     });
   }
 
