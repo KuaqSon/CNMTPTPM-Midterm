@@ -111,18 +111,56 @@ export class MapContainer extends Component {
         if (status == this.props.google.maps.GeocoderStatus.OK) {
           console.log(results[0].formatted_address);
           this.marker.setPosition(results[0].geometry.location);
-          this.setState({
-            foundAddress: results[0].formatted_address,
-            isGeocodingError: false,
-            currentLocation: results[0].geometry.location,
-          });
+          var distance = this.caculatorDistance(this.state.currentLocation ,results[0].geometry.location);
+          console.log(distance);
+          if(distance <= 100 ){
+            alert("Không thể định vị, vị trí bạn chọn nằm trong bán kính 100m, vui lòng cập nhật vị trí ngoài bán kính 100m!");
+          } else {
+            this.setState({
+              foundAddress: results[0].formatted_address,
+              isGeocodingError: false,
+              currentLocation: results[0].geometry.location,
+            });
+            this.renderDirection(results[0].geometry.location);
+          }
+
         }
-        this.renderDirection(results[0].geometry.location);
       });
     });
 
     this.renderDirection(this.state.currentLocation);
     console.log(this.props.requestLocation);
+  }
+
+  caculatorDistance = (coor1, coor2) => { 
+    
+    function toRad(x) {
+      return x * Math.PI / 180;
+    }
+
+    var lon1 = coor1.lng();
+    var lat1 = coor1.lat();
+
+    console.log("test lat1" + lat1);
+
+    var lon2 = coor2.lng();
+    var lat2 = coor2.lat();
+    console.log("test lat2" + lat2);
+
+
+    var R = 6378137; // m
+
+    var x1 = lat2 - lat1;
+    var dLat = toRad(x1);
+    var x2 = lon2 - lon1;
+    var dLon = toRad(x2)
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+
+    return d;
   }
 
   detectCurrentLocation = () => {
