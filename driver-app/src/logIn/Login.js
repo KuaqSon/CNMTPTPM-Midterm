@@ -57,9 +57,18 @@ class LoginForm extends Component {
           // localStorage.setItem('')
           // if(res.auth === true)
           localStorage.setItem('auth', res.auth);
+          var auth = localStorage.getItem("auth");
+          if (auth === "false" || auth === null) {
+              self.props.history.push('/login');
+          }
+          else {
+            self.props.history.push('/driver');
+          }
         }
         else {
-          console.log("DKM éo có tài khoảng cũng đòi login!");
+          // console.log("DKM éo có tài khoảng cũng đòi login!");
+          localStorage.setItem('auth', false);
+          self.props.history.push('/login');
         }
 
       })

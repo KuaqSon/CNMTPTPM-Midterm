@@ -114,9 +114,10 @@ class RequestForm extends Component {
 
     componentDidMount() {
         // authRfToken();
+        var self = this;
         var auth = localStorage.getItem("auth");
         if (auth === "false" || auth === null) {
-            this.props.history.push('/login');
+            self.props.history.push('/login');
         }
     }
 

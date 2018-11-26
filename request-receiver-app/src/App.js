@@ -10,13 +10,19 @@ import {
   withRouter
 } from "react-router-dom";
 
-
-
 class App extends Component {
   render() {
+    const auth = localStorage.getItem("auth");
     return (
       <Router>
         <div>
+          <Route exact path="/" render={() => (
+            auth ? (
+              <Redirect to="/request"/>
+            ) : (
+              <Redirect to="/login"/>
+            )
+          )}/>
           <Route path="/request" component={RequestForm} />
           <Route path="/login" component={LoginForm} />
         </div>
