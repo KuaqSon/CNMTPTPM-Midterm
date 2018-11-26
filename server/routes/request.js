@@ -1,11 +1,12 @@
 var express = require('express');
 var Request = require('../dbQuery/getRequest');
+var auth = require('../config/token').verifyAccessToken;
 var router = express.Router();
 
 
-router.get('/', function (req, res) {
+router.get('/',auth, function (req, res) {
     // console.log(req.params.name);
-
+    console.log('asdas');
     Request.loadAll()
         .then(rows => {
             res.json(rows);
@@ -19,7 +20,7 @@ router.get('/', function (req, res) {
 });
 
 
-router.post('/add', function (req, res) {
+router.post('/add',auth , function (req, res) {
     var name = req.body.name;
     var telephone = req.body.telephone;
     var address = req.body.address;

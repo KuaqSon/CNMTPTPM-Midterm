@@ -2,12 +2,16 @@ var localStratery = require('passport-local').Strategy;
 var bcrypt = require('bcryptjs');
 var User = require('../dbQuery/getUsers');
 var authRepo = require('./token');
+// const verifyAccessToken = authRepo.verifyAccessToken;
 
 module.exports = function (passport) {
 
     passport.use(new localStratery(function (username, password, done) {
         // console.log(usrename);
         // console.log(password);
+
+        // if(authRepo.verifyAccessToken(res, req, next))
+
         User.findUser(username)
             .then(rows => {
                 // console.log(rows);
@@ -19,21 +23,24 @@ module.exports = function (passport) {
                     // console.log(rows[0].password);
                     bcrypt.compare(password, rows[0].password, function (err, isMatch) {
                         if (isMatch){
-                            console.log('true');
                             var userEntity = rows[0];
+                            console.log(userEntity);
+
                             var acToken = authRepo.generateAccessToken(userEntity);
                             var rfToken = authRepo.generateRefreshToken();
                             authRepo.updateRefreshToken(userEntity.id, rfToken)
                                 .then(value => {
-                                    console.log(userEntity);
-                                    console.log(acToken);
-                                    console.log(rfToken);
-                                    // res.json({
-                                    //     auth: true,
-                                    //     user: userEntity,
-                                    //     access_token: acToken,
-                                    //     refresh_token: rfToken
-                                    // });
+
+                                    // console.log(userEntity);
+                                    // console.log(acToken);
+                                    // console.log(rfToken);
+                                    // console.log(value);
+                                    res.json({
+                                        auth: true,
+                                        user: userEntity,
+                                        access_token: acToken,
+                                        refresh_token: rfToken
+                                    });
                                 })
                                 .catch(err=>{
                                     console.log(err);

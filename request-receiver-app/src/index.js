@@ -4,6 +4,10 @@ import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+// import { ApolloProvider } from 'react-apollo';
+// import { ApolloClient, createNetworkInterface } from 'react-apollo';
+
+
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

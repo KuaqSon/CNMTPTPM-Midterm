@@ -11,7 +11,7 @@ exports.findByTelephone = (telephoneNumber) =>{
 };
 
 exports.findByName = (name) =>{
-	var sql = 'select * from request where name = ' + name;
+	var sql = 'select * from request where name = "' + name+ ' " ';
 	return db.load(sql);
 };
 
@@ -25,12 +25,21 @@ exports.edit = (id, telephoneNumber, name , address, infor) =>{
 	return db.load(sql); 
 }
 
-exports.addRequest = (name, telephoneNumber, address, infor) =>{
-	var sql = 'insert into request value (default, ' + telephoneNumber + ', "'+ name +'", "' + address + '" , "'+ infor +'", default, default, default)';
+exports.addRequest = (name, telephoneNumber, address, infor, lat, log) =>{
+	var sql = 'insert into request value (default, ' + telephoneNumber + ', "'+ name +'", "' + address + '" , "'+ infor +'", 1 ,'+ lat +','+ log +', default, default)';
 	return db.load(sql);
 }
 
 exports.setState = (id, state) => {
-	var sql = 'update request set state = ' + state + ' where id = ' + id;
+	var sql = 'update request set state = "' + state + '" where id = ' + id;
 	return bd.load(sql);
+}
+exports.deleteRequest = (id) => {
+	var sql = 'update request set isDelete = 1 where id = '+ id;
+	return db.load(sql);
+}
+
+exports.loadRequest = () => {
+	var sql = 'select * from request where isDelete = 0';
+	return db.load(sql);
 }
