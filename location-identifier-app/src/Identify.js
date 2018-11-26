@@ -145,6 +145,7 @@ class Identify extends Component {
         </div >
         <div className="maps-container">
           <MapContainer
+            requestId={detail.id}
             address={detail.address}
           ></MapContainer>
         </div>

@@ -50,6 +50,7 @@ class LoginForm extends Component {
           localStorage.setItem('email', JSON.stringify(res.user.email));
           localStorage.setItem('id', JSON.stringify(res.user.id));
           // if(res.auth === true)
+          localStorage.setItem("auth", res.auth);
           var auth = localStorage.getItem("auth");
           if (auth === "false" || auth === null) {
               self.props.history.push('/login');

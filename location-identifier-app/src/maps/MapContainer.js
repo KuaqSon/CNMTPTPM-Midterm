@@ -85,6 +85,7 @@ export class MapContainer extends Component {
     const lat = this.state.identifyLocation.lat;
     const lng = this.state.identifyLocation.lng;
     const id = this.props.requestId;
+    console.log(id);
     var data = {
       id: id,
       lat: lat,
