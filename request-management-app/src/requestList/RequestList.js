@@ -14,8 +14,20 @@ class RequestForm extends Component {
         super();
         this.state = {
             res: false,
+            driverName: '',
+            requestLocation: {
+                lat: '',
+                lng: ''
+            },
+            driverLocation: {
+                lat: '',
+                lng: ''
+            },
             endpoint: "http://localhost:3000"
         }
+
+        this.SetRequestDetail = this.SetRequestDetail.bind(this);
+
     }
 
     componentDidMount() {
@@ -47,11 +59,24 @@ class RequestForm extends Component {
         });
     }
 
-    GetRequestDetails = (record) => {
-        console.log(record);
+    SetRequestDetail = (record) => {
+        this.setState({
+            driverName: record.driverName,
+            requestLocation: {
+                lat: record.latRequest + '',
+                lng: record.lngRequest + ''
+            },
+            driverLocation: {
+                lat: record.latDriver + '',
+                lng: record.lngDriver + ''
+            }
+        })
     }
 
-
+    GetRequestDetails = (record) => {
+        this.SetRequestDetail(record);
+        console.log(record);
+    }
 
     render() {
 
@@ -98,7 +123,7 @@ class RequestForm extends Component {
                     <Col md={6}>
                         <div className="list-container">
                             <CardBody>
-                                <CardTitle><Badge className="driver-name" color="info">Driver Tran Van A</Badge></CardTitle>
+                                <CardTitle><Badge className="driver-name" color="info">Driver {this.state.driverName ? this.state.driverName : ''}</Badge></CardTitle>
                                 <CardText>This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</CardText>
                                 <CardText>
                                     <small className="text-muted">Last updated 3 mins ago</small>
@@ -110,7 +135,8 @@ class RequestForm extends Component {
                         <div className="mt-3">
                             {/* <h1><Badge color="secondary">Maps will load here...</Badge></h1> */}
                             <MapContainer 
-                                // requestLocation={this.state.requestLocation}
+                                requestLocation={this.state.requestLocation}
+                                driverLocation={this.state.driverLocation}
                             />
                         </div>
                     </Col>

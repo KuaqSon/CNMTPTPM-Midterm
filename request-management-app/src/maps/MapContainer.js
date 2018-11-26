@@ -35,48 +35,48 @@ export class MapContainer extends Component {
     };
   }
 
-  geocodeAddress = (address) => {
-    this.geocoder.geocode({ 'address': address }, (results, status) => {
+  // geocodeAddress = (address) => {
+  //   this.geocoder.geocode({ 'address': address }, (results, status) => {
 
-      if (status === this.props.google.maps.GeocoderStatus.OK) {
+  //     if (status === this.props.google.maps.GeocoderStatus.OK) {
 
-        this.setState({
-          foundAddress: results[0].formatted_address,
-          isGeocodingError: false
-        });
+  //       this.setState({
+  //         foundAddress: results[0].formatted_address,
+  //         isGeocodingError: false
+  //       });
 
-        this.map.setCenter(results[0].geometry.location);
-        this.marker.setPosition(results[0].geometry.location);
+  //       this.map.setCenter(results[0].geometry.location);
+  //       this.marker.setPosition(results[0].geometry.location);
         
-        // const lat= results[0].geometry.location.lat();
-        // const lng= results[0].geometry.location.lng();
+  //       // const lat= results[0].geometry.location.lat();
+  //       // const lng= results[0].geometry.location.lng();
 
-        // console.log("lat: " + lat);
-        // console.log("lng: " + lng);
+  //       // console.log("lat: " + lat);
+  //       // console.log("lng: " + lng);
 
-        return;
-      }
+  //       return;
+  //     }
 
-      this.setState({
-        foundAddress: null,
-        isGeocodingError: true
-      });
+  //     this.setState({
+  //       foundAddress: null,
+  //       isGeocodingError: true
+  //     });
 
-      this.map.setCenter({
-        lat: ATLANTIC_OCEAN.latitude,
-        lng: ATLANTIC_OCEAN.longitude
-      });
+  //     this.map.setCenter({
+  //       lat: ATLANTIC_OCEAN.latitude,
+  //       lng: ATLANTIC_OCEAN.longitude
+  //     });
 
-      this.marker.setPosition({
-        lat: ATLANTIC_OCEAN.latitude,
-        lng: ATLANTIC_OCEAN.longitude
-      });
+  //     this.marker.setPosition({
+  //       lat: ATLANTIC_OCEAN.latitude,
+  //       lng: ATLANTIC_OCEAN.longitude
+  //     });
 
-    });
-  }
+  //   });
+  // }
 
   componentWillReceiveProps(props) {
-    this.renderDirection(this.state.currentLocation);
+    this.renderDirection();
   }
 
   componentDidMount() {
@@ -101,62 +101,66 @@ export class MapContainer extends Component {
     this.directionsService = new this.props.google.maps.DirectionsService();
     this.directionsDisplay = new this.props.google.maps.DirectionsRenderer(); 
 
-    this.detectCurrentLocation();
+    // this.detectCurrentLocation();
 
-    this.geocoder = new this.props.google.maps.Geocoder();
-    this.props.google.maps.event.addListener(this.map, 'click', (event) => {
-      this.geocoder.geocode({
-        'latLng': event.latLng
-      }, (results, status) => {
-        if (status == this.props.google.maps.GeocoderStatus.OK) {
-          console.log(results[0].formatted_address);
-          this.marker.setPosition(results[0].geometry.location);
-          this.setState({
-            foundAddress: results[0].formatted_address,
-            isGeocodingError: false,
-            currentLocation: results[0].geometry.location,
-          });
-        }
-        this.renderDirection(results[0].geometry.location);
-      });
-    });
+    // this.geocoder = new this.props.google.maps.Geocoder();
+    // this.props.google.maps.event.addListener(this.map, 'click', (event) => {
+    //   this.geocoder.geocode({
+    //     'latLng': event.latLng
+    //   }, (results, status) => {
+    //     if (status == this.props.google.maps.GeocoderStatus.OK) {
+    //       console.log(results[0].formatted_address);
+    //       this.marker.setPosition(results[0].geometry.location);
+    //       this.setState({
+    //         foundAddress: results[0].formatted_address,
+    //         isGeocodingError: false,
+    //         currentLocation: results[0].geometry.location,
+    //       });
+    //     }
+    //     this.renderDirection(results[0].geometry.location);
+    //   });
+    // });
 
-    this.renderDirection(this.state.currentLocation);
+    this.renderDirection();
     console.log(this.props.requestLocation);
   }
 
-  detectCurrentLocation = () => {
-    if (navigator && navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(pos => {
-        const coords = pos.coords;
-        const latLng = new this.props.google.maps.LatLng(coords.latitude, coords.longitude);
-        this.geocoder.geocode({
-          'latLng': latLng
-        }, (results, status) => {
-          if (status == this.props.google.maps.GeocoderStatus.OK) {
-            console.log(results[0].formatted_address);
-            this.marker.setPosition(results[0].geometry.location);
-            this.map.setCenter(results[0].geometry.location);
-            this.setState({
-              foundAddress: results[0].formatted_address,
-              isGeocodingError: false,
-              currentLocation: latLng, 
-            });
-          }
-          this.renderDirection(results[0].geometry.location);
-        });
-      });
-    }
-  }
+  // detectCurrentLocation = () => {
+  //   if (navigator && navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(pos => {
+  //       const coords = pos.coords;
+  //       const latLng = new this.props.google.maps.LatLng(coords.latitude, coords.longitude);
+  //       this.geocoder.geocode({
+  //         'latLng': latLng
+  //       }, (results, status) => {
+  //         if (status == this.props.google.maps.GeocoderStatus.OK) {
+  //           console.log(results[0].formatted_address);
+  //           this.marker.setPosition(results[0].geometry.location);
+  //           this.map.setCenter(results[0].geometry.location);
+  //           this.setState({
+  //             foundAddress: results[0].formatted_address,
+  //             isGeocodingError: false,
+  //             currentLocation: latLng, 
+  //           });
+  //         }
+  //         this.renderDirection(results[0].geometry.location);
+  //       });
+  //     });
+  //   }
+  // }
 
-  renderDirection = (currentLocation) => {
+  renderDirection = () => {
     console.log(this.props.requestLocation);
-    if (!this.props.requestLocation.lat && !this.props.requestLocation.lng && !this.props.requestLocation){
+    if (!this.props.requestLocation.lat && !this.props.requestLocation.lng && !this.props.requestLocation
+        && !this.props.driverLocation.lat && !this.props.driverLocation.lng && !this.props.driverLocation ){
       return;
     }
+
+    
+    const origin = new this.props.google.maps.LatLng(Number(this.props.driverLocation.lat), Number(this.props.driverLocation.lng));
     const des = new this.props.google.maps.LatLng(Number(this.props.requestLocation.lat), Number(this.props.requestLocation.lng));
     this.directionsService.route({
-      origin: currentLocation,
+      origin: origin,
       destination: des,
       travelMode: 'DRIVING'
     }, (response, status) => {
