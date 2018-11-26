@@ -15,9 +15,17 @@ import {
 class App extends Component {
   
   render() {
+    const auth = localStorage.getItem("auth");
     return (
       <Router>
         <div>
+          <Route exact path="/" render={() => (
+            auth ? (
+              <Redirect to="/driver"/>
+            ) : (
+              <Redirect to="/login"/>
+            )
+          )}/>
           <Route path="/login" component={LoginForm}/>
           <Route path="/driver" component={Driver}/>
         </div>
