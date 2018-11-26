@@ -26,6 +26,8 @@ class Driver extends Component {
     self.state = {
       status: false,
       statusText: "STANDBY",
+      rideStatus: false,
+      rideText: "BẮT ĐẦU",
       modalVisible: false,
       time: {}, 
       seconds: 10,
@@ -44,6 +46,7 @@ class Driver extends Component {
     this.startTimer = this.startTimer.bind(this);
     this.countDown = this.countDown.bind(this);
     this.handleStatusChange = this.handleStatusChange.bind(this);  
+    this.handleStart = this.handleStart.bind(this);  
     this.handleModalVisible = this.handleModalVisible.bind(this);
     this.hanldeAcceptRequest = this.hanldeAcceptRequest.bind(this);
 
@@ -181,6 +184,30 @@ class Driver extends Component {
     //   modalVisible: !self.state.modalVisible,
     // });
     // const id = localStorage.getItem("idDriver");
+
+  }
+
+  handleStart = () => {
+    const self = this;
+    if (self.state.status) {
+      self.setState({
+        rideStatus: true,
+        rideText: "KẾT THÚC",
+        status: false,
+        statusText: "STANDBY"
+      })
+      localStorage.setItem('state', 0);
+      self.changeState();
+    } else {
+      self.setState({
+        rideStatus: false,
+        rideText: "BẮT ĐẦU",
+        status: true,
+        statusText: "READY"
+      })
+      localStorage.setItem('state', 1);
+      self.changeState();
+    }
 
   }
 
@@ -501,25 +528,8 @@ class Driver extends Component {
                   <br />
                   chuyến đi
                 </div>
-
-                <div className="status-info">
-                  <div className="mb-3 mt-2">
-                    <Progress value={75} />
-                    <div className="text-center">
-                      <Badge color="dark" className="info-badge mt-2">
-                        75%
-                        </Badge>
-                    </div>
-                  </div>
-                  <Badge color="success" className="info-badge mb-2">
-                    Tổng cộng: 9Km
-                    </Badge>
-                  <Badge color="info" className="info-badge mb-2">
-                    Hoàn Thành: 5Km
-                    </Badge>
-                  <Badge color="warning" className="info-badge mb-2">
-                    Còn lại: 4Km
-                    </Badge>
+                <div className="status-info text-center">
+                  <Button color={self.state.rideStatus ? "danger" : "success"} onClick={() => this.handleStart()}>{self.state.rideText}</Button>
                 </div>
               </div>
             </Col>
@@ -544,11 +554,8 @@ class Driver extends Component {
                   {localStorage.getItem("name")}
                 </div>
 
-                <div className="card-bottom-content">
-                  Lorem Ipsum has
-                  been the industry's standard
-                  dummy text ever since the 1500s
-                </div>
+                {/* <div className="card-bottom-content">
+                </div> */}
               </div>
             </Col>
           </Row>
