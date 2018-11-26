@@ -53,7 +53,7 @@ class Driver extends Component {
     self.handleStatusChange = self.handleStatusChange.bind(self);
     // self.notice = self.notice.bind(self);
     self.send = self.send.bind(self);
-    self.accept = self.accept.bind(self);
+    // self.accept = self.accept.bind(self);
 }
 
   secondsToTime(secs) {
@@ -174,7 +174,8 @@ class Driver extends Component {
     const self = this;
 
     self.setState({
-      modalVisible: false
+      modalVisible: false,
+      res: false
     })
     // self.setState({
     //   modalVisible: !self.state.modalVisible,
@@ -292,7 +293,7 @@ class Driver extends Component {
       })
   }
 
-  accept = () => {
+  hanldeAcceptRequest = () => {
     // e.preventDefault();
     var self = this;
     var data = {
@@ -380,6 +381,9 @@ class Driver extends Component {
       }
       //
     })
+    self.setState({
+      modalVisible: false
+    });
   }
 
 
@@ -452,7 +456,7 @@ class Driver extends Component {
                 <div>
                   {/* <Button color="primary" onClick={() => this.handleModalVisible(true)}>Accept{this.state.time.s}</Button>{' '}
                   <Button color="secondary" onClick={() => this.handleModalVisible(false)}>Cancel</Button> */}
-                  <Button color="primary" onClick={() => self.accept()}>Accept {self.state.time.s}</Button>{' '}
+                  <Button color="primary" onClick={() => self.hanldeAcceptRequest()}>Accept {self.state.time.s}</Button>{' '}
                   <Button color="secondary" onClick={self.handleModalVisible}>Cancel</Button>
                 </div>
               </div>
@@ -517,13 +521,11 @@ class Driver extends Component {
                 <div className="card-info-header">
                   Khách hàng
                   <br />
-                  Trần Thị B
+                  {data.name}
                 </div>
 
                 <div className="card-bottom-content">
-                  Lorem Ipsum has
-                  been the industry's standard
-                  dummy text ever since the 1500s
+                {data.infor}
                 </div>
               </div>
             </Col>
@@ -532,7 +534,7 @@ class Driver extends Component {
                 <div className="card-info-header">
                   Tài xế
                   <br />
-                  Nguyễn Văn A
+                  {localStorage.getItem("name")}
                 </div>
 
                 <div className="card-bottom-content">

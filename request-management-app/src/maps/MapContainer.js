@@ -151,7 +151,7 @@ export class MapContainer extends Component {
 
   renderDirection = (currentLocation) => {
     console.log(this.props.requestLocation);
-    if (!this.props.requestLocation.lat && !this.props.requestLocation.lng){
+    if (!this.props.requestLocation.lat && !this.props.requestLocation.lng && !this.props.requestLocation){
       return;
     }
     const des = new this.props.google.maps.LatLng(Number(this.props.requestLocation.lat), Number(this.props.requestLocation.lng));

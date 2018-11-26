@@ -125,7 +125,7 @@ class App extends Component {
                     </ListGroupItemText>
                     <ListGroupItemText>
                       <Badge className="info-badge" color="dark" pill>Notes</Badge>
-                      {detail.info? detail.info: ""}
+                      {detail.infor? detail.infor: ""}
                     </ListGroupItemText>
                   </ListGroupItem>
                   {/* <ListGroupItem>

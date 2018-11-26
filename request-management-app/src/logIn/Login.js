@@ -3,8 +3,8 @@ import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import './login.css';
 import '../App.css';
 // import Cookies from 'universal-cookie';
-import axios from 'axios'
-import { isObject } from 'util';
+// import axios from 'axios'
+// import { isObject } from 'util';
 
 
 class LoginForm extends Component {

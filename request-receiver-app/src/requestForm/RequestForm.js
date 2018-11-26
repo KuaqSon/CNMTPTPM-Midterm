@@ -41,7 +41,7 @@ class RequestForm extends Component {
 
         if (session.email && session.token) {
             h.append('x-access-token', session.token);
-            h.append('email', session.email);
+            // h.append('email', session.email);
         };
 
         fetch('http://localhost:3000/request/add', {
@@ -86,7 +86,7 @@ class RequestForm extends Component {
                     
                             if (sessionT.email && sessionT.token) {
                                 hT.append('x-access-token', sessionT.token);
-                                hT.append('email', sessionT.email);
+                                // hT.append('email', sessionT.email);
                             };
 
                             fetch('http://localhost:3000/request/add', {
