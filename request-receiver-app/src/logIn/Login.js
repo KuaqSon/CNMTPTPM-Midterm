@@ -55,6 +55,7 @@ class LoginForm extends Component {
           localStorage.setItem('id', JSON.stringify(res.user.id));
           // if(res.auth === true)
           localStorage.setItem('auth', res.auth);
+          this.props.history.push('/request');
         }
         else {
           console.log("DKM éo có tài khoảng cũng đòi login!");
