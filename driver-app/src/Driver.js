@@ -89,6 +89,12 @@ class Driver extends Component {
     self.authRfToken();
     if (self.state.socketListener === true)
       self.send();
+
+      // var auth = localStorage.getItem("auth");
+      // if (auth === "false" || auth === null) {
+      //     self.props.history.push('/login');
+      // }
+
   }
 
   send = () => {

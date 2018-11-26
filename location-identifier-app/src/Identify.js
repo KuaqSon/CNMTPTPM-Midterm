@@ -28,7 +28,12 @@ class Identify extends Component {
       reconnectionAttempts: 5,
     });
     socket.on("get data", data => self.setState({ res: JSON.stringify(data) }));
-    console.log(self.state.res);
+    // console.log(self.state.res);
+
+    var auth = localStorage.getItem("auth");
+    if (auth === "false" || auth === null) {
+        self.props.history.push('/login');
+    }
   };
 
   SetRequestDetail = (record) => {

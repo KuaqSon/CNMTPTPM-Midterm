@@ -3,7 +3,6 @@ import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import './login.css';
 import '../App.css';
 // import Cookies from 'universal-cookie';
-import axios from 'axios'
 import { isObject } from 'util';
 
 
@@ -55,9 +54,20 @@ class LoginForm extends Component {
           localStorage.setItem('id', JSON.stringify(res.user.id));
           // if(res.auth === true)
           localStorage.setItem('auth', res.auth);
+          // localStorage.setItem('auth', res.auth);
+          var auth = localStorage.getItem("auth");
+          if (auth === "false" || auth === null) {
+              self.props.history.push('/login');
+          }
+          else {
+            self.props.history.push('/identify');
+          }
         }
         else {
-          console.log("DKM éo có tài khoảng cũng đòi login!");
+          // console.log("DKM éo có tài khoảng cũng đòi login!");
+          localStorage.setItem('auth', false);
+          self.props.history.push('/login');
+
         }
 
       })

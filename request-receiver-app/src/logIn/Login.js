@@ -19,10 +19,6 @@ class LoginForm extends Component {
     }
   }
 
-
-
-
-
   handleSubmit(e) {
     e.preventDefault();
     var self = this;
@@ -54,12 +50,18 @@ class LoginForm extends Component {
           localStorage.setItem('email', JSON.stringify(res.user.email));
           localStorage.setItem('id', JSON.stringify(res.user.id));
           // if(res.auth === true)
-          localStorage.setItem('auth', res.auth);
-          this.props.history.push('/request');
+          var auth = localStorage.getItem("auth");
+          if (auth === "false" || auth === null) {
+              self.props.history.push('/login');
+          }
+          else {
+            self.props.history.push('/request');
+          }
         }
         else {
-          console.log("DKM éo có tài khoảng cũng đòi login!");
+          // console.log("DKM éo có tài khoảng cũng đòi login!");
           localStorage.setItem('auth', false);
+          self.props.history.push('/login');
 
         }
 
