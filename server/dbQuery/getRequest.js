@@ -1,6 +1,7 @@
 var db = require('../config/db');
 //state = 0 NO driver accept
 // state =1 Driver accept
+// state =2 completed
 exports.loadAll = () => {
 	var sql = 'select * from request order by created desc';
 	return db.load(sql);
@@ -9,6 +10,11 @@ exports.loadAll = () => {
 exports.joinTable = () => {
 	// var sql = 'select request.id, request.name, request.address, request.infor, request.state, request.lat, request.log, request.idUser, request.idDriver, user.name, user.address, user.lat, user.log from request left join user on request.idDriver = user.id order by request.created desc';
 	var sql = 'select request.*, user.name as nameDriver, user.lat as latDriver, user.log as lngDriver, user.address as addressDriver from request, user where request.idDriver = user.id order by request.created desc'
+	return db.load(sql);
+}
+
+exports.changeState = (id, state) =>{
+	var sql = ' update request set state = '+ state + ' where id = ' + id;
 	return db.load(sql);
 }
 

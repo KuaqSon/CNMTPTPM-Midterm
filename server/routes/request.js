@@ -34,6 +34,21 @@ router.post('/identifier', function(req, res){
     })
 });
 
+router.post('/state', function(req, res){
+    var id = req.body.idRequest;
+    var state = req.body.state;
+    // var log = req.body.log;
+// console.log(id);
+    Request.changeState(id, state)
+    .then(row => {
+        res.json({
+            res: row
+        });
+    }).catch(err => {console.log(err);
+        res.statusCode = 500;
+    })
+});
+
 router.post('/add',auth , function (req, res) {
     var name = req.body.name;
     var telephone = req.body.telephone;

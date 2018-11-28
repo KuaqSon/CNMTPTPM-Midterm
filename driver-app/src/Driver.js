@@ -115,13 +115,17 @@ class Driver extends Component {
     const socketListener = 'driver' + id;
     socket.on(socketListener, (data) => {
       self.setState({ res: data });
-      if (!self.isEmpty(data))
+      if (!self.isEmpty(data)){
+
         console.log(data);
-      localStorage.setItem("idRequest", data.id);
+      localStorage.setItem('idRequest', self.state.res.id);
+      localStorage.setItem('idRequest', data.id);
+
       self.setState({
         modalVisible: true,
         socketListener: false,
       });
+    }
       // console.log(self.state.socketListener);
     })
 
@@ -204,6 +208,8 @@ class Driver extends Component {
       })
       localStorage.setItem('state', 0);
       self.changeState();
+      self.changeStateRequest(1);
+
     } else {
       self.setState({
         rideStatus: false,
@@ -213,9 +219,46 @@ class Driver extends Component {
       })
       localStorage.setItem('state', 1);
       self.changeState();
+      self.changeStateRequest(2);
+
     }
 
   }
+
+
+  changeStateRequest = (state) => {
+    const self = this;
+    var idRequest = localStorage.getItem('idRequest');
+    // var state = localStorage.getItem('')
+    const data = {
+      idRequest: idRequest,
+      state: state
+    }
+    console.log(data);
+
+    const session = {
+      // email: localStorage.getItem('email'),
+      token: localStorage.getItem('x-access-token')
+    }
+    const h = new Headers();
+    h.append('Content-Type', 'application/json');
+
+    if (session.email && session.token) {
+      h.append('x-access-token', session.token);
+      // h.append('email', session.email);
+    };
+
+    fetch('http://localhost:3000/request/state', {
+      method: 'POST',
+      // mode: 'noCORS',
+      body: JSON.stringify(data),
+      headers: h
+    }).then(function (res) {
+      return res.json();
+    })
+  } 
+
+
 
   handleStatusChange = () => {
     const self = this;
