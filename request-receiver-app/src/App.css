@@ -1,5 +1,9 @@
 body {
-  background-color: #f1f1f1 !important;
+  /* background-color: #f1f1f1 !important; */
+  /* background: -webkit-linear-gradient(-45deg, #42275a, #734b6d); */
+  background: -webkit-linear-gradient(-45deg, #2b5876 , #4e4376);
+  /* background: linear-gradient(to right,#a1d3b0,#f6f1d3); */
+  /* background: #293f50; */
 }
 
 .App {

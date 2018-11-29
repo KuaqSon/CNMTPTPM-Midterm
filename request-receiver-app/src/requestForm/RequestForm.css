@@ -1,11 +1,14 @@
 .request-form {
     /* border: 1px solid black; */
     padding: 1em;
+    background: url('../assets/pickup-car.svg') no-repeat;
+    /* width: 2.8em; */
+    /* height: 2.8em; */
 }
 
 .request-form .header-request {
     /* border: 1px solid red; */
-    width: 30%;
+    width: 230px;
     background-color: white;
     font-weight: bolder;
     font-size: 2em;
@@ -26,4 +29,17 @@
     border-radius: 16px;
     padding: 2em;
     box-shadow: 0 5px 20px rgba(25,17,34,0.1);
+    min-width: 350px;
+    max-width: 500px;
+}
+
+.car-logo {
+    margin-bottom: 0;
+}
+
+.car-icon {
+    height: 100%;
+    width: 20em;
+    vertical-align: text-top;
+    content: url(../assets/pickup-car.svg); 
 }
