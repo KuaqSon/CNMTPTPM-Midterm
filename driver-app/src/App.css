@@ -1,5 +1,6 @@
 body {
-  background-color: #f1f1f1 !important;
+  /* background-color: #f1f1f1 !important; */
+  background: -webkit-linear-gradient(-45deg, #2b5876 , #4e4376);
 }
 
 .maps-container {
@@ -20,6 +21,7 @@ body {
   padding: 0.5em;
   margin-bottom: 1em;
   box-shadow: 0 5px 20px rgba(25,17,34,0.1);
+  width: 230px;
 }
 
 .app-container .info-container {
@@ -52,6 +54,10 @@ body {
 
 .ride-info-card {
   background-color: #ec7300;
+}
+
+.card-infor {
+  min-width: 230px;
 }
 
 .request-info-card {

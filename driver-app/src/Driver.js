@@ -507,15 +507,11 @@ class Driver extends Component {
     return (
       <div className="App">
         <div className="app-container">
-          <Row onClick={() => self.handleModalVisible()}>
-            <Col md={4} sm={6}>
-              <div className="brand-logo">
-                Doubble Son
-                <br></br>
-                Take car
-              </div>
-            </Col>
-          </Row>
+          <div className="brand-logo">
+            Doubble Son
+            <br></br>
+            Take car
+          </div>
 
           <div>
             <Modal
@@ -552,30 +548,7 @@ class Driver extends Component {
           </div>
 
           <Row>
-            <Col md={3} sm={6}>
-              <div className="info-container driver-status-card">
-                <div className="card-info-header">
-                  Trạng thái
-                </div>
-
-                <div className="status-info">
-                  <Row className="align-items-center no-gutters">
-                    <Col>
-                      <label className="switch">
-                        <input type="checkbox" checked={self.state.status} onChange={() => self.handleStatusChange()} />
-                        <span className="slider round"></span>
-                      </label>
-                    </Col>
-                    <Col>
-                      <Badge color={self.state.status == true ? "primary" : "danger"} className="info-badge">
-                        {self.state.statusText}
-                      </Badge>
-                    </Col>
-                  </Row>
-                </div>
-              </div>
-            </Col>
-            <Col md={3} sm={6}>
+            <Col md={3} sm={6} className="card-infor">
               <div className="info-container ride-info-card">
                 <div className="card-info-header">
                   Thông tin
@@ -587,7 +560,7 @@ class Driver extends Component {
                 </div>
               </div>
             </Col>
-            <Col md={3} sm={6}>
+            <Col md={3} sm={6} className="card-infor">
               <div className="info-container request-info-card">
                 <div className="card-info-header">
                   Khách hàng
@@ -600,7 +573,7 @@ class Driver extends Component {
                 </div>
               </div>
             </Col>
-            <Col md={3} sm={6}>
+            <Col md={3} sm={6} className="card-infor">
               <div className="info-container driver-info-card">
                 <div className="card-info-header">
                   Tài xế
@@ -610,6 +583,29 @@ class Driver extends Component {
 
                 {/* <div className="card-bottom-content">
                 </div> */}
+              </div>
+            </Col>
+            <Col md={3} sm={6} className="card-infor">
+              <div className="info-container driver-status-card">
+                <div className="card-info-header">
+                  Trạng thái
+                </div>
+
+                <div className="status-info">
+                  <div className="text-center">
+                    <div>
+                      <Badge color={self.state.status == true ? "primary" : "danger"} className="info-badge">
+                        {self.state.statusText}
+                      </Badge>
+                    </div>
+                    <div className="mt-3">
+                      <label className="switch">
+                        <input type="checkbox" checked={self.state.status} onChange={() => self.handleStatusChange()} />
+                        <span className="slider round"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
               </div>
             </Col>
           </Row>
