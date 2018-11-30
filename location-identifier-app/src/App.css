@@ -1,5 +1,6 @@
 body {
-    background-color: #f1f1f1 !important;
+    /* background-color: #f1f1f1 !important; */
+    background: -webkit-linear-gradient(-45deg, #2b5876 , #4e4376);
 }
 
 .maps-container {
@@ -46,4 +47,18 @@ body {
 .App {
     max-width: 1140px;
     margin: 0 auto;
+}
+
+.skeleton-container {
+    height: 32px !important;
+    line-height: 20px !important;
+    margin-bottom: 16px !important;
+}
+
+.skeleton-container span {
+    width: 90% !important;
+}
+
+.skeleton-container span span {
+    margin-bottom: 16px !important;
 }

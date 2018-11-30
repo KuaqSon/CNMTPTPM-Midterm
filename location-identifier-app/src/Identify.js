@@ -3,6 +3,7 @@ import MapContainer from './maps/MapContainer';
 import './App.css';
 import { Col, Row, Button, Table, Form, FormGroup, Label, Input, FormText, Badge, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 import socketIoClient from 'socket.io-client';
+import Skeleton from 'react-skeleton-loader';
 
 
 class Identify extends Component {
@@ -58,26 +59,12 @@ class Identify extends Component {
       // console.log(data);
       
     });
-
   }
 
   render() {
     var self = this;
     var { res, detail } = self.state;
     const data = JSON.parse(self.state.res);
-// res.map(item => console.log(item.name));
-// res là 1 cục json mẫu như này:
-//create table `request`(
-//id int(11) unsigned AUTO_INCREMENT PRIMARY KEY,
-//telephone int(14) not null,
-//name varchar(50) not null,
-//address varchar(50) not null,
-//infor varchar(100),
-//state integer not null, = 1 là đang chờ thằng tài tới chở, =0 là nó đón cmnr, =2 là lọ đó hủy chuyến
-//isDelete boolean default false,
-//created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-//);
-// Cần lấy name, telephone, address, state thôi nhá
 
     console.log(res);
     return (
@@ -87,28 +74,36 @@ class Identify extends Component {
             Doubble Son
           </div>
 
-
-
           <Row>
             <Col md={6}>
               <div className="info-container">
                 <div className="request-table">
-                  <Table hover responsive>
-                    <thead>
-                      <tr>
-                        <th>Name</th>
-                        <th>Address</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {Object.values(data).map(x => 
-                      <tr key={x.id} onClick={() => this.GetRequestDetail(x)}>
-                        <td>{x.name}</td>
-                        <td>{x.address.length >= 50 ? x.address.substring(0, 50)+ "..." : x.address}</td>
-                      </tr>
-                    )}
-                    </tbody>
-                  </Table>
+                  {
+                    !data ? (
+                      <div className="skeleton-container">
+                        <Skeleton count={7}></Skeleton>
+                      </div>
+                    )
+                    :(
+                      <Table hover responsive>
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Address</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {Object.values(data).map(x => 
+                          <tr key={x.id} onClick={() => this.GetRequestDetail(x)}>
+                            <td>{x.name}</td>
+                            <td>{x.address.length >= 50 ? x.address.substring(0, 50)+ "..." : x.address}</td>
+                          </tr>
+                        )}
+                        </tbody>
+                      </Table>
+                    )
+                  }
+                  
                 </div>
               </div>
             </Col>
@@ -141,7 +136,7 @@ class Identify extends Component {
                 </ListGroup>
               </div>
             </Col>
-          </Row>f
+          </Row>
         </div >
         <div className="maps-container">
           <MapContainer
