@@ -18,6 +18,7 @@ import {
   Modal,
 } from 'reactstrap';
 import socketIoClient from 'socket.io-client';
+import Slider from "react-slick";
 
 class Driver extends Component {
   constructor(props) {
@@ -504,14 +505,51 @@ class Driver extends Component {
     // console.log(data);
     var driverId = localStorage.getItem('id');
     // console.log(data);
+
+    // const slickSettings = {
+    //   dots: true,
+    //   infinite: true,
+    //   speed: 500,
+    //   slidesToShow: 4,
+    //   slidesToScroll: 1
+    // };
+
+    const slickSettings =  {
+      dots: true,
+      infinite: false,
+      speed: 500,
+      slidesToShow: 4,
+      slidesToScroll: 4,
+      arrows: true,
+      responsive: [
+        {
+          breakpoint: 600,
+          settings: { slidesToShow: 1, slidesToScroll: 1, infinite: false }
+        },
+        {
+          breakpoint: 830,
+          settings: { slidesToShow: 2, slidesToScroll: 2, infinite: false }
+        },
+        {
+          breakpoint: 1024,
+          settings: { slidesToShow: 3, slidesToScroll: 3, infinite: false }
+        }
+      ]
+    };
+
     return (
       <div className="App">
         <div className="app-container">
-          <div className="brand-logo">
-            Doubble Son
-            <br></br>
-            Take car
-          </div>
+          <Row>
+            <Col xs={12} sm={6} md={3}>
+              <div className="brand-logo">
+                <Row>
+                  <Col xs={6} sm={12} style={{minWidth: 230}}>Doubble Son</Col>
+                  <Col style={{minWidth: 160}}>Take car</Col>
+                </Row>
+              </div>
+            </Col>
+          </Row>
 
           <div>
             <Modal
@@ -547,7 +585,81 @@ class Driver extends Component {
             </Modal>
           </div>
 
-          <Row>
+          <div className="slick-comtainer">
+            <Slider {...slickSettings}>
+              <div>
+                <div className="card-infor">
+                  <div className="info-container ride-info-card">
+                    <div className="card-info-header">
+                      Thông tin
+                      <br />
+                      chuyến đi
+                    </div>
+                    <div className="status-info text-center">
+                      <Button color={self.state.rideStatus ? "danger" : "success"} onClick={() => this.handleStart()}>{self.state.rideText}</Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div className="card-infor">
+                  <div className="info-container request-info-card">
+                    <div className="card-info-header">
+                      Khách hàng
+                      <br />
+                      {data.name}
+                    </div>
+
+                    <div className="card-bottom-content">
+                    {data.infor}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="card-infor">
+                  <div className="info-container driver-info-card">
+                    <div className="card-info-header">
+                      Tài xế
+                      <br />
+                      {localStorage.getItem("name")}
+                    </div>
+
+                    {/* <div className="card-bottom-content">
+                    </div> */}
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div className="card-infor">
+                  <div className="info-container driver-status-card">
+                    <div className="card-info-header">
+                      Trạng thái
+                    </div>
+
+                    <div className="status-info">
+                      <div className="text-center">
+                        <div>
+                          <Badge color={self.state.status == true ? "primary" : "danger"} className="info-badge">
+                            {self.state.statusText}
+                          </Badge>
+                        </div>
+                        <div className="mt-3">
+                          <label className="switch">
+                            <input type="checkbox" checked={self.state.status} onChange={() => self.handleStatusChange()} />
+                            <span className="slider round"></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Slider>
+          </div>
+
+          {/* <Row>
             <Col md={3} sm={6} className="card-infor">
               <div className="info-container ride-info-card">
                 <div className="card-info-header">
@@ -580,9 +692,6 @@ class Driver extends Component {
                   <br />
                   {localStorage.getItem("name")}
                 </div>
-
-                {/* <div className="card-bottom-content">
-                </div> */}
               </div>
             </Col>
             <Col md={3} sm={6} className="card-infor">
@@ -608,7 +717,7 @@ class Driver extends Component {
                 </div>
               </div>
             </Col>
-          </Row>
+          </Row> */}
         </div>
         <div className="maps-container">
           <MapContainer

@@ -21,10 +21,11 @@ body {
   padding: 0.5em;
   margin-bottom: 1em;
   box-shadow: 0 5px 20px rgba(25,17,34,0.1);
-  width: 230px;
+  min-width: 230px;
 }
 
 .app-container .info-container {
+  position: relative;
   border-radius: 16px;
   padding: 0.5em 1em;
   box-shadow: 0 5px 20px rgba(25,17,34,0.1);
@@ -48,7 +49,7 @@ body {
   margin-top: 1em;
   position: absolute;
   bottom: 1em;
-  width: calc(100% - 4em);
+  width: calc(100% - 2em);
   color: #424242;
 }
 
@@ -57,7 +58,8 @@ body {
 }
 
 .card-infor {
-  min-width: 230px;
+  width: 224px;
+  margin: 0 auto;
 }
 
 .request-info-card {
@@ -164,4 +166,31 @@ input:checked + .slider:before {
 .App {
   max-width: 1140px;
   margin: 0 auto;
+}
+
+.slick-comtainer {
+  margin: 0 24px 16px 24px;
+}
+
+.slick-dots {
+  bottom: -32px !important;
+}
+.slick-dots li {
+  margin: 0 16px;
+}
+.slick-dots li button:before {
+  content: " " !important;
+  background: linear-gradient(45deg, #ff9a9e , #fad0c4);
+  opacity: 1;
+  height: 16px !important;
+  width: 16px !important;
+  border-radius: 50%;
+}
+.slick-dots li.slick-active button:before {
+  content: " " !important;
+  background: linear-gradient(45deg, red, blue);
+  opacity: 1;
+  height: 16px !important;
+  width: 16px !important;
+  border-radius: 50%;
 }
