@@ -3,8 +3,7 @@ import MapContainer from './maps/MapContainer';
 import './App.css';
 import { Col, Row, Button, Table, Form, FormGroup, Label, Input, FormText, Badge, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 import socketIoClient from 'socket.io-client';
-import Skeleton from 'react-skeleton-loader';
-
+import Skeleton from 'react-loading-skeleton';
 
 class Identify extends Component {
   constructor() {
@@ -81,7 +80,17 @@ class Identify extends Component {
                   {
                     !data ? (
                       <div className="skeleton-container">
-                        <Skeleton count={7}></Skeleton>
+                        <div className="short"><Skeleton/></div>
+                        <div className="long"><Skeleton/></div>
+                        <div className="long"><Skeleton/></div>
+                        <div className="short mt-3"><Skeleton/></div>
+                        <div className="long"><Skeleton/></div>
+                        <div className="long"><Skeleton/></div>
+                        <div className="short mt-3"><Skeleton/></div>
+                        <div className="long"><Skeleton/></div>
+                        <div className="long"><Skeleton/></div>
+                        <div className="long"><Skeleton/></div>
+                        <div className="long"><Skeleton/></div>
                       </div>
                     )
                     :(
@@ -109,24 +118,50 @@ class Identify extends Component {
             </Col>
             <Col md={6}>
               <div className="info-container">
-                <ListGroup>
+                <ListGroup flush>
                   <ListGroupItem>
-                    <ListGroupItemHeading>
-                      <Badge className="info-badge" color="dark" pill>Name</Badge>
+                    <Badge className="info-badge" color="dark">Name</Badge>
+                    <div className="mt-2 ml-3 detail-infor">
+                      {!data && (
+                        <div className="skeleton-container">
+                          <div className="short"><Skeleton height={24}/></div>
+                        </div>
+                      )}
                       {detail.name? detail.name : ""}
-                    </ListGroupItemHeading>
-                    <ListGroupItemText>
-                      <Badge className="info-badge" color="dark" pill>Phone</Badge>
+                    </div>
+                  </ListGroupItem>
+                  <ListGroupItem>
+                    <Badge className="info-badge" color="dark">Phone</Badge>
+                    <div className="mt-2 ml-3 detail-infor">
+                      {!data && (
+                        <div className="skeleton-container">
+                          <div className="short"><Skeleton height={20}/></div>
+                        </div>
+                      )}
                       {detail.telephone? detail.telephone: ""}
-                    </ListGroupItemText>
-                    <ListGroupItemText>
-                      <Badge className="info-badge" color="dark" pill>Address</Badge>
+                    </div>
+                  </ListGroupItem>
+                  <ListGroupItem>
+                    <Badge className="info-badge" color="dark">Address</Badge>
+                    <div className="mt-2 ml-3 detail-infor">
+                      {!data && (
+                        <div className="skeleton-container">
+                          <div className="long"><Skeleton height={24}/></div>
+                        </div>
+                      )}
                       {detail.address? detail.address: ""}
-                    </ListGroupItemText>
-                    <ListGroupItemText>
-                      <Badge className="info-badge" color="dark" pill>Notes</Badge>
+                    </div>
+                  </ListGroupItem>
+                  <ListGroupItem>
+                    <Badge className="info-badge" color="dark">Notes</Badge>
+                    <div className="mt-2 ml-3 detail-infor">
+                      {!data && (
+                        <div className="skeleton-container">
+                          <div className="short"><Skeleton height={20}/></div>
+                        </div>
+                      )}
                       {detail.infor? detail.infor: ""}
-                    </ListGroupItemText>
+                    </div>
                   </ListGroupItem>
                   {/* <ListGroupItem>
                     <Input value={detail.address} type="text" name="address" placeholder="Input address here to indentify location..."></Input>

@@ -44,21 +44,23 @@ body {
     font-size: 16px;
 }
 
+.info-container .detail-infor {
+    font-size: 1.25em;
+}
+
 .App {
     max-width: 1140px;
     margin: 0 auto;
 }
 
 .skeleton-container {
-    height: 32px !important;
-    line-height: 20px !important;
-    margin-bottom: 16px !important;
+    line-height: 30px;
 }
 
-.skeleton-container span {
-    width: 90% !important;
+.skeleton-container .long {
+    width: 90%;
 }
 
-.skeleton-container span span {
-    margin-bottom: 16px !important;
+.skeleton-container .short {
+    width: 70%;
 }
