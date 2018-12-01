@@ -4,6 +4,8 @@ import { Col, Row, Button, Form, FormGroup, Label, Input, FormText } from 'react
 // import axios from 'axios';
 // import authRfToken from '../config/auth';
 import { Redirect } from "react-router-dom";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 class RequestForm extends Component {
 
@@ -12,16 +14,31 @@ class RequestForm extends Component {
     super();
     var self = this;
     this.state = {
-      auth: Boolean
+      auth: Boolean,
     }
-    self.handleSubmit = self.handleSubmit.bind(self);
-
+    this.handleSubmit = this.handleSubmit.bind(self);
   }
 
-
+  Submit = (e) => {
+    e.preventDefault();
+    var self = this;
+    confirmAlert({
+      title: "Gọi xe ?",
+      message: "Chào " + self.name.value + ", bạn sẽ gọi một xe đến đón tại: " +  self.address.value,
+      buttons: [
+        {
+          label: "Đồng Ý",
+          onClick: () => self.handleSubmit(e)
+        },
+        {
+          label: "Hủy"
+        }
+      ]
+    })
+  }
 
   handleSubmit(e) {
-    e.preventDefault();
+    // e.preventDefault();
     var self = this;
     var data = {
       "name": self.name.value,
@@ -32,6 +49,7 @@ class RequestForm extends Component {
       "log": 0,
       "idUser": localStorage.getItem('id')
     }
+
     const session = {
       email: localStorage.getItem('email'),
       token: localStorage.getItem('x-access-token')
@@ -110,6 +128,16 @@ class RequestForm extends Component {
           localStorage.setItem("auth", false);
         }
       })
+
+    confirmAlert({
+      title: "Thành công !!",
+      message: "Bạn đã gọi xe thành công, hãy chờ một lát để xe đến đón bạn nhé !",
+      buttons: [
+        {
+          label: "OK"
+        }
+      ]
+    })
   }
 
   componentDidMount() {
@@ -120,7 +148,6 @@ class RequestForm extends Component {
       self.props.history.push('/login');
     }
   }
-
 
   // updateToken(){
   //     const rfToken = localStorage.getItem('refresh_token');
@@ -146,8 +173,6 @@ class RequestForm extends Component {
   //     })
   // }
 
-
-
   render() {
     const self = this;
 
@@ -163,37 +188,35 @@ class RequestForm extends Component {
               </div>
             </Col>
             <Col className="mt-5">
-              <Form className="form-container" onSubmit={self.handleSubmit}>
+              <Form className="form-container" onSubmit={self.Submit}>
                 <FormGroup >
-                  <Label for="name">Name</Label>
+                  <Label for="name"><h5>Name</h5></Label>
                   {/* <Input  type="text" name="name" id="name" placeholder="with a placeholder" floatingLabelText="name"/> */}
-                  <Input innerRef={(name) => this.name = name} type="text" name="name" id="name" placeholder="with a placeholder" />
+                  <Input innerRef={(name) => this.name = name} type="text" name="name" id="name" placeholder="Tell us what is your name ?" />
                 </FormGroup>
                 <FormGroup >
-                  <Label for="telephone">Phone Number</Label>
+                  <Label for="telephone"><h5>Phone Number</h5></Label>
                   {/* <Input ref={(ref) => {self.telephone = ref}} type="tel" name="phone" id="examplePassword" placeholder="password placeholder" floatingLabelText="telephone" /> */}
-                  <Input innerRef={(telephone) => this.telephone = telephone} type="tel" name="phone" id="telephone" placeholder="password placeholder" />
+                  <Input innerRef={(telephone) => this.telephone = telephone} type="tel" name="phone" id="telephone" placeholder="Tell us what is your phone ?" />
                 </FormGroup>
                 <FormGroup>
-                  <Label for="exampleAddress">Address</Label>
+                  <Label for="exampleAddress"><h5>Address</h5></Label>
                   {/* <Input ref={(ref) => {self.address = ref}} type="text" name="address" id="exampleAddress" placeholder="1234 Main St" floatingLabelText="address"/> */}
-                  <Input innerRef={(address) => this.address = address} type="text" name="address" id="address" placeholder="1234 Main St" />
+                  <Input innerRef={(address) => this.address = address} type="text" name="address" id="address" placeholder="Tell us where are you :D ?" />
                 </FormGroup>
                 <FormGroup >
-                  <Label for="exampleCity">Information</Label>
+                  <Label for="exampleCity"><h5>Information</h5></Label>
                   {/* <Input ref={(ref) => {self.infor = ref}} type="text" name="city" id="exampleCity" floatingLabelText="infor" /> */}
-                  <Input innerRef={(infor) => this.infor = infor} type="text" name="city" id="infor" />
+                  <Input innerRef={(infor) => this.infor = infor} type="textarea" name="city" id="infor" placeholder="Give us anything else..."/>
                 </FormGroup>
-                <FormGroup >
+                {/* <FormGroup >
                   <Label for="exampleState">State</Label>
-                  {/* <Input ref={(ref) => {self.state = ref}} type="text" name="state" id="exampleState"  floatingLabelText="state"/> */}
                   <Input innerRef={(state) => this.State = state} type="text" name="state" id="state" />
                 </FormGroup>
                 <FormGroup>
                   <Label for="exampleAddress2">Notes</Label>
-                  {/* <Input ref={(ref) => {self.note = ref}} type="textarea" name="note" id="exampleNote" placeholder="Apartment, studio, or floor" /> */}
                   <Input innerRef={(note) => this.note = note} type="textarea" name="note" id="note" />
-                </FormGroup>
+                </FormGroup> */}
                 <Button color="success">Book</Button>
               </Form>
             </Col>
