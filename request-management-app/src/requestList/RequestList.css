@@ -44,3 +44,15 @@
     height: 320px;
     overflow-y: scroll;
 }
+
+.skeleton-container {
+    line-height: 30px;
+}
+
+.skeleton-container .long {
+    width: 90%;
+}
+
+.skeleton-container .short {
+    width: 70%;
+}
