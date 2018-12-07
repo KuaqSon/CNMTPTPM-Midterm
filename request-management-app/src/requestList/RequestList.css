@@ -5,7 +5,7 @@
 
 .request-list .header-request {
     /* border: 1px solid red; */
-    width: 30%;
+    width: 230px;
     background-color: white;
     font-weight: bolder;
     font-size: 2em;
@@ -43,4 +43,16 @@
 .request-table {
     height: 320px;
     overflow-y: scroll;
+}
+
+.skeleton-container {
+    line-height: 30px;
+}
+
+.skeleton-container .long {
+    width: 90%;
+}
+
+.skeleton-container .short {
+    width: 70%;
 }

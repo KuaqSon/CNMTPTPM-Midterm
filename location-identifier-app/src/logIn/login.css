@@ -8,3 +8,13 @@
     padding: 1em;
     box-shadow: 0 5px 20px rgba(25,17,34,0.1);
 }
+
+.brand-logo {
+    background-color: white;
+    font-weight: bolder;
+    font-size: 2em;
+    border-radius: 16px;
+    padding: 0.5em;
+    margin-bottom: 1em;
+    box-shadow: 0 5px 20px rgba(25,17,34,0.1);
+}
