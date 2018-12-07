@@ -41,23 +41,12 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 
-
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('express-session')({
     secret: 'keyboard cat',
     resave: true,
     saveUninitialized: true
 }));
-
-
-
-
-// // Passport Config
-// require('./config/passport')(passport);
-// // Passport Middleware
-// app.use(passport.initialize());
-// app.use(passport.session());
-// // Express session middleware
 
 app.use(session({
     secret: 'keyboard cat',
@@ -76,17 +65,6 @@ app.use(function (req, res, next) {
     next();
 });
 
-// require('./config/passport')(passport);
-
-
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-
-// function ensureAuthenticated(req, res, next) {
-//     if (req.isAuthenticated()) { return next(); }
-//     // res.redirect('/login')
-// }
 
 app.use('/users', user);
 app.use('/request', request);
@@ -98,16 +76,6 @@ app.get('/', (req, res) => {
         msg: 'hello all'
     })
 });
-
-// routes should be at the last
-// app.use(app.router);
-
-
-
-// Socket listen on port 3001 
-
-
-
 
 // io.set('transports', ["websocket", "polling"]);
 const port1 = 3001;
@@ -145,23 +113,23 @@ var server = app.listen(port, function () {
 
 const io = socketIo.listen(server);
 
-const getApiAndEmitForReceiver = async socket => {
+// const getApiAndEmitForReceiver = async socket => {
 
-    var res;
-    Requestdb.loadAll()
-        .then(rows => {
-            res = rows;
-            try {
-                socket.emit("get data", res);
-            } catch (error) {
-                console.error(`Error: ${error.code}`);
-            }
-        }).catch(err => {
-            console.log(err);
-            res.statusCode = 500;
-            res.end('Erro');
-        });
-}
+//     var res;
+//     Requestdb.loadAll()
+//         .then(rows => {
+//             res = rows;
+//             try {
+//                 socket.emit("get data", res);
+//             } catch (error) {
+//                 console.error(`Error: ${error.code}`);
+//             }
+//         }).catch(err => {
+//             console.log(err);
+//             res.statusCode = 500;
+//             res.end('Erro');
+//         });
+// }
 
 
 const getApiAndEmitForManager = async socket => {
@@ -184,29 +152,44 @@ const getApiAndEmitForManager = async socket => {
 
 }
 
+const getApiAndEmitForIdentifier = async socket => {
+
+    var res;
+    Requestdb.loadRequestForIdentifier()
+        .then(rows => {
+            res = rows;
+            try {
+                socket.emit("get data", res);
+            } catch (erro) {
+                console.error(`Error: ${error.code}`);
+            }
+        }).catch(err => {
+            console.log(err);
+            res.statusCode = 500;
+            res.end('Erro');
+        })
+}
 
 
 io.on('connect', socket => {
     console.log("New user connected");
     setInterval(
         () => {
-            getApiAndEmitForReceiver(socket);
-            getApiAndEmitForManager(socket);
             getApiAndEmitForDriver(socket);
         }
-        , 14000
+        , 11000
     );
 
-    // setInterval(
-    //     () => {
-    //         getApiAndEmitForManager(socket);
-    //     }, 5000
-    // );
-    // setInterval(
-    //     () => {
-    //         getApiAndEmitForDriver(socket);
-    //     }, 14000
-    // );
+    setInterval(
+        () => {
+            getApiAndEmitForManager(socket);
+        }, 4000
+    );
+    setInterval(
+        () => {
+            getApiAndEmitForIdentifier(socket);
+        }, 4000
+    );
 
     socket.on("disconnected", () => console.log("client disconnected"));
 
@@ -232,51 +215,51 @@ const getApiAndEmitForDriver = async socket => {
         .then(rows => {
             if (!isEmpty(rows)) {
                 // rows.forEach(row => {
-                    rowReq = rows[0];
+                rowReq = rows[0];
 
-                    const coorLocation = {
-                        lat: rowReq.lat,
-                        log: rowReq.log
-                    }
-                    dbUser.findDriver()
-                        .then(rows => {
-                            if (isEmpty(rows)) {
-                                idDriver = 0;
-                                status = 0;
-                            } else {
-                                var coorDriver = {
-                                    lat: rows[0].lat,
-                                    log: rows[0].log
-                                }
-                                var minDistance = caculatorDistance(coorLocation, coorDriver);
-                                rows.forEach(row => {
-                                    coorDriver = {
-                                        lat: row.lat,
-                                        log: row.log
-                                    }
-                                    var distance = caculatorDistance(coorLocation, coorDriver);
-                                    if (minDistance <= distance && row.id != 0) {
-                                        idDriver = row.id;
-                                        status = row.state;
-                                        minDistance = distance;
-                                    }
-                                });
-
-
-                                if (idDriver != 0 && idDriver != 1 && status === 1) {
-                                    res = rowReq;
-                                    try {
-                                        socket.emit("driver" + idDriver, res);
-                                    } catch (error) {
-                                        console.error(`Error: ${error.code}`);
-                                    }
-                                }
-
+                const coorLocation = {
+                    lat: rowReq.lat,
+                    log: rowReq.log
+                }
+                dbUser.findDriver()
+                    .then(rows => {
+                        if (isEmpty(rows)) {
+                            idDriver = 0;
+                            status = 0;
+                        } else {
+                            var coorDriver = {
+                                lat: rows[0].lat,
+                                log: rows[0].log
                             }
-                        });
-                    // console.log("test2 "+idDriver);
+                            var minDistance = caculatorDistance(coorLocation, coorDriver);
+                            rows.forEach(row => {
+                                coorDriver = {
+                                    lat: row.lat,
+                                    log: row.log
+                                }
+                                var distance = caculatorDistance(coorLocation, coorDriver);
+                                if (minDistance <= distance && row.id != 0) {
+                                    idDriver = row.id;
+                                    status = row.state;
+                                    minDistance = distance;
+                                }
+                            });
 
-                    // -------------------
+
+                            if (idDriver != 0 && idDriver != 1 && status === 1) {
+                                res = rowReq;
+                                try {
+                                    socket.emit("driver" + idDriver, res);
+                                } catch (error) {
+                                    console.error(`Error: ${error.code}`);
+                                }
+                            }
+
+                        }
+                    });
+                // console.log("test2 "+idDriver);
+
+                // -------------------
 
             }
         })
@@ -314,7 +297,7 @@ function findingDriver(coorLocation, idIgnor) {
     // return idDriver;
 }
 
-function caculatorDistance(coor1, coor2) { 
+function caculatorDistance(coor1, coor2) {
     // console.log(lat1);
     // console.log(lat2);
     // const distance = Math.sqrt((lat1 - lat2) * (lat1 - lat2) + (log1 - log2) * (log1 - log2));

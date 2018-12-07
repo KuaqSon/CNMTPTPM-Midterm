@@ -28,6 +28,11 @@ exports.loadRequestNew = () => {
 	return db.load(sql);
 }
 
+exports.loadRequestForIdentifier = () => {
+	var sql = 'select * from request where isDelete = 0 and state = 0 and lat = 0 and log = 0';
+	return db.load(sql);
+}
+
 exports.identifier = (id, lat, log) => {
 	
 	var sql = ' update request set lat = '+ lat + ', log = '+ log + ' where id = ' + id;

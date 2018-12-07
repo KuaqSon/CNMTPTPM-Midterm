@@ -77,33 +77,18 @@ class Driver extends Component {
   }
 
   componentDidMount() {
-    // let timeLeftVar = self.secondsToTime(self.state.seconds);
-    // self.setState({ time: timeLeftVar });
     const self = this;
-    // self.setState({
-    //   socketListener: true
-    // });
     var auth = localStorage.getItem('auth');
     if (auth === "false" || auth === null) {
       self.props.history.push('/login');
     }
-
-    // console.log(self.state.socketListener);
     self.authRfToken();
     if (self.state.socketListener === true)
       self.send();
-
-      // var auth = localStorage.getItem("auth");
-      // if (auth === "false" || auth === null) {
-      //     self.props.history.push('/login');
-      // }
-
   }
 
   send = () => {
     var self = this;
-
-
     const id = localStorage.getItem('idDriver');
     const { endpoint } = self.state;
     const socket = socketIoClient(endpoint, {
@@ -126,7 +111,6 @@ class Driver extends Component {
         socketListener: false,
       });
     }
-      // console.log(self.state.socketListener);
     })
 
   }
@@ -147,9 +131,6 @@ class Driver extends Component {
     })
     clearInterval(self.timer);
     self.timer = setInterval(self.countDown, 1000);
-    // if (self.timer == 0 && self.state.seconds > 0) {
-    //   self.timer = setInterval(self.countDown, 1000);
-    // }
   }
 
   countDown() {
@@ -165,9 +146,6 @@ class Driver extends Component {
     if (seconds === 0) {
       clearInterval(self.timer);
       self.handleModalVisible();
-      // self.setState({
-      //   modalVisible: false
-      // })
     }
   }
 
@@ -234,7 +212,7 @@ class Driver extends Component {
       idRequest: idRequest,
       state: state
     }
-    console.log(data);
+    // console.log(data);
 
     const session = {
       // email: localStorage.getItem('email'),
@@ -245,12 +223,10 @@ class Driver extends Component {
 
     if (session.email && session.token) {
       h.append('x-access-token', session.token);
-      // h.append('email', session.email);
     };
 
     fetch('http://localhost:3000/request/state', {
       method: 'POST',
-      // mode: 'noCORS',
       body: JSON.stringify(data),
       headers: h
     }).then(function (res) {
