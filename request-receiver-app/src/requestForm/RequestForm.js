@@ -68,11 +68,14 @@ class RequestForm extends Component {
       body: JSON.stringify(data),
       headers: h
     }).then(function (res) {
+
       return res.json();
     })
       .then((res) => {
         console.log(res);
         console.log(res.msg);
+
+
         if (res.msg === "INVALID TOKEN") {
 
           const rfToken = localStorage.getItem('refresh_token');
@@ -117,27 +120,37 @@ class RequestForm extends Component {
               })
                 .then((res) => {
                   console.log(res);
+                  confirmAlert({
+                    title: "Thành công !!",
+                    message: "Bạn đã gọi xe thành công, hãy chờ một lát để xe đến đón bạn nhé !",
+                    buttons: [
+                      {
+                        label: "OK"
+                      }
+                    ]
+                  });
                 })
             } else {
               localStorage.setItem('auth', false);
 
             }
           })
+        } else 
+        {
+          confirmAlert({
+            title: "Thành công !!",
+            message: "Bạn đã gọi xe thành công, hãy chờ một lát để xe đến đón bạn nhé !",
+            buttons: [
+              {
+                label: "OK"
+              }
+            ]
+          });
         };
         if (res.statusCode === 403) {
           localStorage.setItem("auth", false);
         }
       })
-
-    confirmAlert({
-      title: "Thành công !!",
-      message: "Bạn đã gọi xe thành công, hãy chờ một lát để xe đến đón bạn nhé !",
-      buttons: [
-        {
-          label: "OK"
-        }
-      ]
-    })
   }
 
   componentDidMount() {
