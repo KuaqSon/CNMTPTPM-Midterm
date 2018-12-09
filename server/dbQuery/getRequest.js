@@ -9,7 +9,7 @@ exports.loadAll = () => {
 
 exports.joinTable = () => {
 	// var sql = 'select request.id, request.name, request.address, request.infor, request.state, request.lat, request.log, request.idUser, request.idDriver, user.name, user.address, user.lat, user.log from request left join user on request.idDriver = user.id order by request.created desc';
-	var sql = 'select request.*, user.name as nameDriver, user.lat as latDriver, user.log as lngDriver, user.address as addressDriver from request, user where request.idDriver = user.id order by request.created desc'
+	var sql = 'select request.*, user.name as nameDriver, user.lat as latDriver, user.log as lngDriver, user.address as addressDriver, user.telephone as telephoneDriver from request, user where request.idDriver = user.id order by request.created desc'
 	return db.load(sql);
 }
 

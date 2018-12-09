@@ -142,8 +142,8 @@ class RequestForm extends Component {
           <Col md={6}>
             <div className="list-container">
               <CardBody>
-                <CardTitle><Badge className="driver-name" color="info">Tài xế: {(this.state.detail.idDriver !== 0 && this.state.detail.idDriver !== 1 && this.state.detail.driverName) ? this.state.detail.driverName : ''}</Badge></CardTitle>
-                <CardText>Điện thoại: {(this.state.detail.idDriver !== 0 && this.state.detail.idDriver !== 1 && this.state.detail.phoneDriver) ? this.state.detail.phoneDriver : ''}</CardText>
+                <CardTitle><Badge className="driver-name" color="info">Tài xế: {(this.state.detail.idDriver !== 0 && this.state.detail.idDriver !== 1 && this.state.detail.nameDriver) ? this.state.detail.nameDriver : ''}</Badge></CardTitle>
+                <CardText>Điện thoại: {(this.state.detail.idDriver !== 0 && this.state.detail.idDriver !== 1 && this.state.detail.telephoneDriver) ? this.state.detail.telephoneDriver : ''}</CardText>
               </CardBody>
 
               <CardBody className="mt-3">
