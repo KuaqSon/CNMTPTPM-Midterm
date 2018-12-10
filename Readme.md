@@ -1,39 +1,40 @@
-##
-##ĐỒ ÁN GIỮA KỲ - CNMTPTPM
+
+## ĐỒ ÁN GIỮA KỲ - CNMTPTPM
 
 ---
 
-###OVERVIEW
+### OVERVIEW
 
-**Sinh viên thực hiện: **
+**Sinh viên thực hiện:**
 
 ```
 1512463 - Nguyễn Quang Sơn
 1512457 - Dương Trần Thái Sơn
-
 ```
 
-**Yêu cầu: **
+#### Video demo: [Youtube playlist](https://www.youtube.com/watch?v=GRsZTK6VRYQ&list=PLdV1jBeCZsNqvP_FfLlXvrdOYiMT5qQjs)
+
+**Yêu cầu:**
 
  - xây dựng hệ thống đặt xe máy qua tổng đài điện thoại ở mức độ cơ bản.
 
 
 ---
 
-###TECHNIQUES
+### TECHNIQUES
 
-** -  SOA RESTful API**
-** - Realtime Web Application**
-** - Google Maps API**
+- **SOA RESTful API**
+- **Realtime Web Application**
+- **Google Maps API**
 
 ---
 
-###APP #1: REQUEST RECEIVER
+### APP #1: REQUEST RECEIVER
 **WebApp** nhận thông tin khách (request): họ tên, điện thoại, địa chỉ đón khách, ghi chú
 
 ---
 
-###APP #2: LOCATION IDENTIFIER
+### APP #2: LOCATION IDENTIFIER
 
 **WebApp** xác định toạ độ khách dựa trên thông tin do **app #1** ghi nhận
 
@@ -46,7 +47,7 @@
 
 ---
 
-###APP #3: REQUEST MANAGEMENT
+### APP #3: REQUEST MANAGEMENT
 
 **WebApp** thể hiện danh sách request cùng trạng thái tương ứng (chưa được định vị, đã định vị xong, đã có xe nhận, đang di chuyển, đã hoàn thành, …)
 
@@ -56,7 +57,7 @@
 
 --
 
-###APP #4: DRIVER
+### APP #4: DRIVER
 
 **WebApp**
 
@@ -71,7 +72,7 @@
 
 ---
 
-###NOTES
+### NOTES
 
 
 - Hệ thống chỉ tìm xe READY để gửi request, không tìm xe BUSY (đang đi đón khách, đang chở khách, offline)
