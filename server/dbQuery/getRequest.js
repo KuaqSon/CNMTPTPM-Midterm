@@ -67,7 +67,7 @@ exports.edit = (id, telephoneNumber, name , address, infor) =>{
 }
 
 exports.addRequest = (name, telephoneNumber, address, infor, lat, log, idUser) =>{
-	var sql = 'insert into request value (default, ' + telephoneNumber + ', "'+ name +'", "' + address + '" , "'+ infor +'", 0 ,'+ lat +','+ log +','+ idUser +',0, default, default)';
+	var sql = 'insert into request value (default, ' + telephoneNumber + ', "'+ name +'", "' + address + '" , "'+ infor +'", 0 ,'+ lat +','+ log +','+ idUser +',1 , default, default)';
 	return db.load(sql);
 }
 

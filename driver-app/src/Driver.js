@@ -168,7 +168,15 @@ class Driver extends Component {
     self.setState({
       modalVisible: false,
       res: false
+    });
+    self.setState({
+      rideStatus: true,
+      rideText: "KẾT THÚC",
+      status: false,
+      statusText: "STANDBY"
     })
+    localStorage.setItem('state', 0);
+    self.changeState();
     // self.setState({
     //   modalVisible: !self.state.modalVisible,
     // });
@@ -635,65 +643,7 @@ class Driver extends Component {
             </Slider>
           </div>
 
-          {/* <Row>
-            <Col md={3} sm={6} className="card-infor">
-              <div className="info-container ride-info-card">
-                <div className="card-info-header">
-                  Thông tin
-                  <br />
-                  chuyến đi
-                </div>
-                <div className="status-info text-center">
-                  <Button color={self.state.rideStatus ? "danger" : "success"} onClick={() => this.handleStart()}>{self.state.rideText}</Button>
-                </div>
-              </div>
-            </Col>
-            <Col md={3} sm={6} className="card-infor">
-              <div className="info-container request-info-card">
-                <div className="card-info-header">
-                  Khách hàng
-                  <br />
-                  {data.name}
-                </div>
-
-                <div className="card-bottom-content">
-                {data.infor}
-                </div>
-              </div>
-            </Col>
-            <Col md={3} sm={6} className="card-infor">
-              <div className="info-container driver-info-card">
-                <div className="card-info-header">
-                  Tài xế
-                  <br />
-                  {localStorage.getItem("name")}
-                </div>
-              </div>
-            </Col>
-            <Col md={3} sm={6} className="card-infor">
-              <div className="info-container driver-status-card">
-                <div className="card-info-header">
-                  Trạng thái
-                </div>
-
-                <div className="status-info">
-                  <div className="text-center">
-                    <div>
-                      <Badge color={self.state.status == true ? "primary" : "danger"} className="info-badge">
-                        {self.state.statusText}
-                      </Badge>
-                    </div>
-                    <div className="mt-3">
-                      <label className="switch">
-                        <input type="checkbox" checked={self.state.status} onChange={() => self.handleStatusChange()} />
-                        <span className="slider round"></span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Col>
-          </Row> */}
+          
         </div>
         <div className="maps-container">
           <MapContainer

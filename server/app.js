@@ -238,11 +238,13 @@ const getApiAndEmitForDriver = async socket => {
                                     log: row.log
                                 }
                                 var distance = caculatorDistance(coorLocation, coorDriver);
-                                if (minDistance <= distance && row.id != 0) {
+                                if (minDistance <= distance && row.id != 0 && row.state === 1) {
                                     idDriver = row.id;
                                     status = row.state;
                                     minDistance = distance;
                                 }
+                                
+                                console.log(row.id +' - '+ idDriver);
                             });
 
 
@@ -250,6 +252,7 @@ const getApiAndEmitForDriver = async socket => {
                                 res = rowReq;
                                 try {
                                     socket.emit("driver" + idDriver, res);
+                                    console.log("driver" + idDriver);
                                 } catch (error) {
                                     console.error(`Error: ${error.code}`);
                                 }
